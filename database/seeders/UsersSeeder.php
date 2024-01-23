@@ -23,6 +23,15 @@ class UsersSeeder extends Seeder
 
         $bank_admin->assignRole('bank_admin');
 
+        $bank_admin2 = [
+            'name' => 'Bank Admin',
+            'email' => 'bank_admin2@yofinvoice.com',
+        ];
+
+        $bank_admin = User::factory()->create($bank_admin2);
+
+        $bank_admin->assignRole('bank_admin');
+
         $bank_user = [
             'name' => 'Bank User',
             'email' => 'bank_user@yofinvoice.com',
@@ -31,5 +40,14 @@ class UsersSeeder extends Seeder
         $bank_user = User::factory()->create($bank_user);
 
         $bank_user->assignRole('bank_user');
+
+        $company_user = [
+            'name' => 'Deveint',
+            'email' => 'deveint@yofinvoice.com'
+        ];
+
+        $company_user = User::factory()->create($company_user);
+
+        $company_user->assignRole('company_user');
     }
 }

@@ -14,5 +14,9 @@ class BankSeeder extends Seeder
     public function run(): void
     {
         Bank::factory()->create();
+        sleep(1);
+        Bank::factory()->create([
+            'url' => '456789'
+        ]);
     }
 }

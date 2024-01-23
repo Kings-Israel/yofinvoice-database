@@ -13,7 +13,7 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['admin', 'bank_admin', 'bank_user', 'anchor', 'vendor'];
+        $roles = ['admin', 'bank_admin', 'bank_user', 'anchor', 'vendor', 'company_user'];
 
         collect($roles)->each(fn ($role) => Role::firstOrCreate(['name' => $role]));
     }

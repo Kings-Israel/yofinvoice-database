@@ -17,13 +17,22 @@ class BankUserSeeder extends Seeder
     {
         $banks = Bank::all();
 
-        foreach ($banks as $bank) {
+        foreach ($banks as $key => $bank) {
             $bank_admin = User::role('bank_admin')->first();
 
             BankUser::create([
                 'user_id' => $bank_admin->id,
                 'bank_id' => $bank->id
             ]);
+
+            if ($bank->id != 1) {
+                $bank_admin = User::role('bank_admin')->orderBy('created_at', 'DESC')->first();
+
+                BankUser::create([
+                    'user_id' => $bank_admin->id,
+                    'bank_id' => $bank->id
+                ]);
+            }
 
             $bank_user = User::role('bank_admin')->first();
 

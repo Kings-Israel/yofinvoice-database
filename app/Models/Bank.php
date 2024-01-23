@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bank extends Model
 {
@@ -23,5 +24,13 @@ class Bank extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'bank_users', 'user_id', 'bank_id');
+    }
+
+    /**
+     * Get all of the companies for the Bank
+     */
+    public function companies(): HasMany
+    {
+        return $this->hasMany(Company::class);
     }
 }
