@@ -21,14 +21,18 @@ class CompanyFactory extends Factory
 
         $cities = ['Nairobi', 'Mombasa', 'Kisumu'];
 
+        $organization_types = ['Cooperative Sacco', 'Proprietor', 'LLP', 'Government', 'Trust', 'Private Limited', 'Public Limited'];
+
+        $customer_type = ['Non-bank Customer', 'Bank Customer'];
+
         return [
             'name' => $name,
             'unique_identification_number' => rand(1000000, 9999999),
             'branch_code' => $name.'-'.time().'-'.rand(1111, 9999),
             'business_identification_number' => mt_rand(1000000, 9999999),
-            'organization_type' => 'Marketer',
+            'organization_type' => $organization_types[rand(0, count($organization_types) - 1)],
             'business_segment' => 'Tech Marketing',
-            'customer_type' => 'Businesses',
+            'customer_type' => $customer_type[rand(0, 1)],
             'kra_pin' => Str::random(11),
             'city' => $cities[rand(0, 2)],
             'postal_code' => '234234 00100',

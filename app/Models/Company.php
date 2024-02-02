@@ -27,4 +27,12 @@ class Company extends Model
     {
         return $this->belongsToMany(User::class, 'company_users', 'user_id', 'company_id');
     }
+
+    /**
+     * The roles that belong to the Company
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(ProgramRole::class, 'program_company_roles', 'company_id', 'role_id');
+    }
 }

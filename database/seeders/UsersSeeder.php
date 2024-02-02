@@ -41,13 +41,34 @@ class UsersSeeder extends Seeder
 
         $bank_user->assignRole('bank_user');
 
-        $company_user = [
-            'name' => 'Deveint',
-            'email' => 'deveint@yofinvoice.com'
+        // Anchor
+        $anchor_user = [
+            'name' => 'Anchor',
+            'email' => 'anchor@yofinvoice.com'
         ];
 
-        $company_user = User::factory()->create($company_user);
+        $anchor_user = User::factory()->create($anchor_user);
 
-        $company_user->assignRole('company_user');
+        $anchor_user->assignRole('company_user');
+
+        // Vendor
+        $vendor_user = [
+            'name' => 'Vendor',
+            'email' => 'vendor@yofinvoice.com'
+        ];
+
+        $vendor_user = User::factory()->create($vendor_user);
+
+        $vendor_user->assignRole('company_user');
+
+        // Buyer
+        $buyer = [
+            'name' => 'Buyer',
+            'email' => 'buyer@yofinvoice.com'
+        ];
+
+        $buyer = User::factory()->create($buyer);
+
+        $buyer->assignRole('company_user');
     }
 }

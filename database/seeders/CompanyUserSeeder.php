@@ -15,15 +15,24 @@ class CompanyUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $companies = Company::all();
+        // Anchor company user
+        $anchor_company = Company::whereHas('roles', function ($query) {
+            $query->where('name', 'anchor');
+        })->first();
+        $anchor_user = User::where('email', 'anchor@yofinvoice.com')->first();
+        CompanyUser::create([
+            'user_id' => $anchor_user->id,
+            'company_id' => $anchor_company->id
+        ]);
 
-        foreach ($companies as $company) {
-            $user = User::role('company_user')->first();
-
-            CompanyUser::create([
-                'user_id' => $user->id,
-                'company_id' => $company->id
-            ]);
-        }
+        // Vendor company user
+        $vendor_company = Company::whereHas('roles', function ($query) {
+            $query->where('name', 'vendor');
+        })->first();
+        $vendor_user = User::where('email', 'vendor@yofinvoice.com')->first();
+        CompanyUser::create([
+            'user_id' => $vendor_user->id,
+            'company_id' => $vendor_company->id
+        ]);
     }
 }
