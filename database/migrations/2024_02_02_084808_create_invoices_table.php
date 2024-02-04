@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('remarks')->nullable();
             $table->string('attachment')->nullable();
             $table->enum('status', ['pending', 'approved', 'denied'])->nullable()->default('pending');
-            $table->enum('financing_status', ['pending', 'financed', 'closed', ''])->nullable()->default(['foo', 'bar']);
+            $table->enum('financing_status', ['pending', 'financed', 'closed'])->nullable()->default('pending');
             $table->timestamps();
         });
     }
