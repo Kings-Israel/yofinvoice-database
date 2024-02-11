@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Permission\Traits\HasRoles;
 
 class Company extends Model
@@ -34,5 +35,21 @@ class Company extends Model
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(ProgramRole::class, 'program_company_roles', 'company_id', 'role_id');
+    }
+
+    /**
+     * Get all of the documents for the Company
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(CompanyDocument::class);
+    }
+
+    /**
+     * Get all of the requestedDocuments for the Company
+     */
+    public function requestedDocuments(): HasMany
+    {
+        return $this->hasMany(RequestDocument::class);
     }
 }

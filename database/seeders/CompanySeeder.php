@@ -17,13 +17,15 @@ class CompanySeeder extends Seeder
         $bank = Bank::first();
 
         Company::factory(3)->create([
-            'bank_id' => $bank->id
+            'bank_id' => $bank->id,
+            'approval_status' => 'approved',
         ]);
 
         $bank_2 = Bank::orderBy('created_at', 'DESC')->first();
 
         Company::factory(2)->create([
-            'bank_id' => $bank_2->id
+            'bank_id' => $bank_2->id,
+            'approval_status' => 'approved',
         ]);
     }
 }
