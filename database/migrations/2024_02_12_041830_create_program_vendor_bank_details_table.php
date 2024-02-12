@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_bank_details', function (Blueprint $table) {
+        Schema::create('program_vendor_bank_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('program_id')->references('id')->on('programs')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('company_id')->references('id')->on('companies')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name_as_per_bank')->nullable();
             $table->string('account_number')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('branch')->nullable();
             $table->string('swift_code')->nullable();
             $table->string('account_type')->nullable();
-            $table->enum('status', ['active', 'inactive'])->nullable()->default('active');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_bank_details');
+        Schema::dropIfExists('progrm_vendor_bank_details');
     }
 };

@@ -17,7 +17,12 @@ class ProgramFeeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'fee_name' => 'VAT',
+            'type' => 'percentage',
+            'value' => 3,
+            'anchor_bearing_discount' => 0,
+            'vendor_bearing_discount' => 3,
+            'taxes' => 'VAT(16%)',
         ];
     }
 }
