@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('bank_id')->references('id')->on('banks')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('program_type_id')->references('id')->on('program_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('program_code_id')->nullable()->references('id')->on('program_codes')->onDelete('set null')->onUpdate('cascade');
-            // $table->foreignId('anchor_id')->references('id')->on('companies')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
             $table->string('code')->nullable();
             $table->bigInteger('eligibility')->nullable();
@@ -44,7 +43,7 @@ return new class extends Migration
             $table->string('recourse')->nullable();
             $table->string('due_date_calculated_from')->nullable();
             $table->string('noa')->nullable();
-            $table->string('account_status')->nullable();
+            $table->enum('account_status', ['pending', 'active', 'suspended'])->nullable()->default('pending');
             $table->string('board_resolution_attachment')->nullable();
             $table->timestamps();
         });

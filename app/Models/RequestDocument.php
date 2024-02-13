@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProgramCompanyRole extends Model
+class RequestDocument extends Model
 {
     use HasFactory;
 
     /**
-     * Get the program that owns the ProgramCompanyRole
+     * Get the company that owns the RequestDocument
      */
-    public function program(): BelongsTo
+    public function company(): BelongsTo
     {
-        return $this->belongsTo(Program::class);
+        return $this->belongsTo(Company::class);
     }
 }

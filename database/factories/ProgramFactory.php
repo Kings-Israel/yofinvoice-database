@@ -17,11 +17,13 @@ class ProgramFactory extends Factory
      */
     public function definition(): array
     {
+        $eligibility = rand(12, 30);
+
         return [
             'name' => fake()->word().'-'.Carbon::now()->format('d-m-H-i-s'),
             'code' => mt_rand(33333, 99999),
-            'eligibility' => mt_rand(50, 90),
-            // 'invoice_margin' => fake(),
+            'eligibility' => $eligibility,
+            'invoice_margin' => 100 - $eligibility,
             'program_limit' => fake()->numberBetween(100000000, 9000000000),
             'approved_date' => Carbon::now()->format('Y-m-d'),
             'limit_expiry_date' => Carbon::now()->addMonths(rand(6, 8))->format('Y-m-d'),

@@ -18,7 +18,7 @@ class ProgramCodeSeeder extends Seeder
 
         $vendor_financing = ['Vendor Financing Receivable' => 'VFR', 'Factoring With Recourse' => 'FR', 'Factoring Without Recourse' => 'FWR'];
 
-        collect($vendor_financing)->each(function ($vendor, $abbrev) use ($program_types) {
+        collect($vendor_financing)->each(function ($abbrev, $vendor) use ($program_types) {
             ProgramCode::create([
                 'program_type_id' => $program_types->where('name', 'Vendor Financing')->first()->id,
                 'name' => $vendor,
