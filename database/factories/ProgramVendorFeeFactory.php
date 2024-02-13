@@ -17,7 +17,12 @@ class ProgramVendorFeeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'fee_name' => 'Withholding',
+            'type' => 'percentage',
+            'value' => 3,
+            'anchor_bearing_discount' => 0,
+            'vendor_bearing_discount' => 3,
+            'taxes' => 'VAT(16%)',
         ];
     }
 }
