@@ -17,7 +17,12 @@ class ProgramVendorBankDetailFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name_as_per_bank' => fake()->name(),
+            'account_number' => rand(1000, 9999).'-'.rand(10000, 99999),
+            'bank_name' => 'KCB',
+            'branch' => 'KCB Branch One',
+            'swift_code' => rand(10000000, 99999999),
+            'account_type' => 'Personal Account',
         ];
     }
 }
