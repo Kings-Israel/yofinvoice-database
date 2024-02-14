@@ -16,10 +16,10 @@ class BankFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->company();
+        $name = ['KCB', 'Equity', 'Ecobank', 'Cooperative'];
 
         return [
-            'name' => $name,
+            'name' => $name[rand(0, 3)],
             'url' => '123456'
         ];
     }
