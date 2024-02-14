@@ -33,4 +33,12 @@ class Bank extends Model
     {
         return $this->hasMany(Company::class);
     }
+
+    /**
+     * Get all of the requiredDocuments for the Bank
+     */
+    public function requiredDocuments(): HasMany
+    {
+        return $this->hasMany(BankDocument::class);
+    }
 }
