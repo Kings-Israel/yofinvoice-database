@@ -18,8 +18,11 @@ class BankFactory extends Factory
     {
         $name = ['KCB', 'Equity', 'Ecobank', 'Cooperative'];
 
+        $bank_emails = ['kings@deveint.com', 'linet@deveint.com', 'barry.osewe@yofinvoice.com', 'anthony.macharia@yofinvoice.com', 'ishmael@deveint.com', 'james.mugwe@yopesa.com'];
+
         return [
             'name' => $name[rand(0, 3)],
+            'email' => $bank_emails[rand(0, 5)],
             'url' => '123456'
         ];
     }

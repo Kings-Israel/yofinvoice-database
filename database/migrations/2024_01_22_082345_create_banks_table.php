@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('url')->nullable()->unique();
+            $table->string('email')->nullable();
             $table->foreignId('contact_person_id')->nullable()->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
