@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles;
 
 class Company extends Model
@@ -51,5 +52,13 @@ class Company extends Model
     public function requestedDocuments(): HasMany
     {
         return $this->hasMany(RequestDocument::class);
+    }
+
+    /**
+     * Get the pipeline associated with the Company
+     */
+    public function pipeline(): HasOne
+    {
+        return $this->hasOne(Pipeline::class, 'id', 'pipeline_id');
     }
 }
