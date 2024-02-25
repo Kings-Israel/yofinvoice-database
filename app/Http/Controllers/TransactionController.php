@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreInvoiceRequest;
-use App\Http\Requests\UpdateInvoiceRequest;
-use App\Http\Resources\DashboardInvoiceRequestResource;
-use App\Models\Invoice;
+use App\Http\Requests\StoreTransactionRequest;
+use App\Http\Requests\UpdateTransactionRequest;
+use App\Http\Resources\AllTransactionResource;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
-class InvoiceController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,12 +22,11 @@ class InvoiceController extends Controller
         $sortBy = $request->query('sortBy', 'id');
         $orderBy = $request->query('orderBy', 'asc');
 
-        $query = Invoice::query();
+        $query = Transaction::query();
 
         if (!is_null($searchQuery)) {
             $query->search('%' . $searchQuery . '%');
         }
-
         if (!is_null($selectedStatus)) {
             $query->where('status', $selectedStatus);
         }
@@ -36,7 +35,7 @@ class InvoiceController extends Controller
 
         $invoices = $query->paginate($itemsPerPage, ['*'], 'page', $page);
         $response = [
-            'data' => DashboardInvoiceRequestResource::collection($invoices),
+            'data' => AllTransactionResource::collection($invoices),
             'total' => $invoices->total(),
             'currentPage' => $invoices->currentPage(),
             'lastPage' => $invoices->lastPage(),
@@ -56,7 +55,7 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreInvoiceRequest $request)
+    public function store(StoreTransactionRequest $request)
     {
         //
     }
@@ -64,7 +63,7 @@ class InvoiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Invoice $invoice)
+    public function show(Transaction $transaction)
     {
         //
     }
@@ -72,7 +71,7 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Invoice $invoice)
+    public function edit(Transaction $transaction)
     {
         //
     }
@@ -80,7 +79,7 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateInvoiceRequest $request, Invoice $invoice)
+    public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
         //
     }
@@ -88,7 +87,7 @@ class InvoiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Invoice $invoice)
+    public function destroy(Transaction $transaction)
     {
         //
     }
