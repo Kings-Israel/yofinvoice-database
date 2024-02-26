@@ -49,4 +49,12 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceFee::class);
     }
+
+    /**
+     * Get all of the paymentRequests for the Invoice
+     */
+    public function paymentRequests(): HasMany
+    {
+        return $this->hasMany(PaymentRequest::class);
+    }
 }
