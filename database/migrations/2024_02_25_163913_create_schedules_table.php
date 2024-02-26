@@ -18,6 +18,7 @@ return new class extends Migration
             $table->dateTime('end')->nullable();
             $table->boolean('allDay')->default(0);
             $table->string('url')->nullable();
+            $table->string('calendar')->nullable();
             $table->json('extendedProps')->nullable();
             $table->timestamps();
 

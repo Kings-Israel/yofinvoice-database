@@ -23,9 +23,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone_number');
             $table->string('point_of_contact')->nullable();
+            $table->string('whatsapp_number')->nullable();
             $table->string('bank_id')->default('1');
             $table->string('region')->nullable();
+            $table->string('industry')->nullable();
             $table->string('location')->nullable();
+            $table->string('campaign')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->default('other');
             $table->enum('status', ['hot', 'warm', 'cold'])->default('hot');
             $table->enum('priority', ['high', 'medium', 'low'])->default('high');
@@ -35,6 +38,7 @@ return new class extends Migration
             $table->string('associated_user')->default('Nairobi');
             $table->enum('interaction_type', ['phone', 'email', 'sms', 'physical'])->default('email');
             $table->string('very_next_step')->default('call');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

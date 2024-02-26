@@ -58,6 +58,7 @@ Route::get('/bank/documents/detail', [FetchBanksDocumentsController::class, 'get
 Route::get('/details/UI/bank/documents', [FetchBanksDocumentsController::class, 'getBankDocuments'])->name('details.bank.documents');
 
 Route::post('/store/UI/pipeline/data', [PipelineController::class, 'store'])->name('store.UI.pipeline.data');
+Route::post('/update/UI/pipeline/data/{id}', [PipelineController::class, 'updatePipeline'])->name('update.UI.pipeline.data.id');
 Route::post('/store/UI/pipeline/lead/data/{id}', [PipelineController::class, 'update'])->name('store.UI.pipeline.lead.data');
 Route::post('/store/UI/pipeline/opportunity/data/{id}', [PipelineController::class, 'update'])->name('store.UI.pipeline.opportunity.data');
 Route::get('/get/UI/pipeline/data', [PipelineController::class, 'index'])->name('get.UI.pipeline.data');
@@ -66,13 +67,20 @@ Route::get('/get/UI/pipeline/widget/data', [PipelineController::class, 'getWidge
 Route::get('/get/UI/pipelines/contacts', [PipelineController::class, 'contactDetails'])->name('get.UI.pipeline.contactDetails');
 Route::get('/get/UI/pipelines/leads', [PipelineController::class, 'leadDetails'])->name('get.UI.pipeline.leadDetails');
 Route::get('/get/UI/pipelines/opportunity', [PipelineController::class, 'opportunityDetails'])->name('get.UI.pipeline.leadDetails');
+Route::get('/get/UI/recent/pipeline/count', [PipelineController::class, 'countPipelineCreatedEachMonth'])->name('count.pipeline.createdd.each.month');
+Route::get('/get/UI/active/dashboard/pipeline', [PipelineController::class, 'activePipeline'])->name('count.active.pipeline');
+Route::get('/get/UI/count/each/stage', [PipelineController::class, 'countEachStageYearly'])->name('count.each.stage.yearly');
+Route::get('/get/UI/recent/prospects/dashboard', [PipelineController::class, 'recentDashboardProspect'])->name('get.UI.pipeline.recent.prospect.dashboard');
 Route::get('/get/UI/pipelines/closed', [PipelineController::class, 'closedDetails'])->name('get.UI.pipeline.leadDetails');
+Route::get('/get/UI/dashboard/lead/opportunity', [PipelineController::class, 'getLeadsOpportunityCount'])->name('get.UI.pipeline.lead.opportunity');
 Route::get('/get/UI/pipeline/cold', [PipelineController::class, 'coldDetails'])->name('get.UI.pipeline.coldDetails');
+Route::get('/get/UI/top/product', [PipelineController::class, 'getTopProduct'])->name('get.top.products');
 Route::post('/check/email', [PipelineController::class, 'checkEmail'])->name('get.UI.check.email.exists');
 Route::post('/mark/UI/pipeline/hot/{id}', function ($id) {
     return Pipeline::whereId($id)->update(['status' => 'hot']);
 });
 Route::get('/get/UI/source/analysis', [SourceAnalysisController::class, 'sourceAnalysis'])->name('get.UI.pipeline.sourceAnalysis');
+Route::get('/get/UI/dashboard/source/analysis', [SourceAnalysisController::class, 'sourceAnalysisDashboardChannel'])->name('get.UI.pipeline.sourceAnalysis');
 Route::get('/test/email/service', [MailingController::class, 'test'])->name('sending.mail.org');
 Route::post('/generate/documents/link', [MailingController::class, 'generateLink'])->name('generate.document.link.org');
 Route::get('/get/uuid/document/{uuid}', [UploadDocumentController::class, 'getDocument'])->name('get.uuid.document');
@@ -87,6 +95,9 @@ Route::get('/all/UI/companies', [CompanyController::class, 'index'])->name('UI.d
 Route::get('/get/UI/invited/guest', [ScheduleController::class, 'getGuestList'])->name('UI.gets.invited');
 Route::post('/post/UI/event', [ScheduleController::class, 'store'])->name('UI.gets.invited');
 Route::get('/all/UI/data/followups', [ScheduleController::class, 'index'])->name('UI.gets.followups.data.invited');
+Route::get('/recent/activity/dashboard', [ScheduleController::class, 'getRecentActivityDashboard'])->name('recent.activity.dashboard');
+Route::get('/schedule/six/monthly', [ScheduleController::class, 'getSixMonthSchedule'])->name('recent.six.month.dashboard');
+Route::get('/schedule/count/all', [ScheduleController::class, 'getScheduleCount'])->name('get.schedule.count');
 
 //Users
 Route::get('/users/UI/list', [UserController::class, 'index'])->name('users.UI.list');

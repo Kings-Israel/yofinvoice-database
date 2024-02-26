@@ -2,20 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Schedule;
-use App\Http\Requests\StoreScheduleRequest;
-use App\Http\Requests\UpdateScheduleRequest;
+use App\Http\Requests\UpdatescheduleRequest;
+use App\Http\Resources\RecentActivityTimelineDashboardResource;
+use App\Http\Resources\Schedule\AllFollowUpsResource;
+use App\Http\Resources\Schedule\GuestListUIResource;
+use App\Models\Pipeline;
+use App\Models\schedule;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $searchQuery = $request->query('q', '');
+        $query = Schedule::query();
+
+        if (!is_null($searchQuery)) {
+            // Assuming 'searchQuery' applies to a specific field or set of fields
+            $query->search('%' . $searchQuery . '%');
+        }
+        return response()->json([
+            'data' => AllFollowUpsResource::collection($query->get()),
+        ]);
     }
 
+    public function getGuestList()
+    {
+        return response()->json([
+            'data' => GuestListUIResource::collection(Pipeline::all()),
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -27,15 +47,26 @@ class ScheduleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreScheduleRequest $request)
+    public function store(Request $request)
     {
-        //
+        $props = $request->input('extendedProps');
+        $event = Schedule::create([
+            'title' => $request->input('title'),
+            'start' => $request->input('start'),
+            'end' => $request->input('end'),
+            'allDay' => $request->input('allDay'),
+            'url' => $request->input('url'),
+            'calendar' => $props['calendar'],
+            'extendedProps' => $props,
+        ]);
+        return response()->json($event, 201);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Schedule $schedule)
+    public function show(schedule $schedule)
     {
         //
     }
@@ -43,7 +74,7 @@ class ScheduleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Schedule $schedule)
+    public function edit(schedule $schedule)
     {
         //
     }
@@ -51,7 +82,7 @@ class ScheduleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateScheduleRequest $request, Schedule $schedule)
+    public function update(UpdatescheduleRequest $request, schedule $schedule)
     {
         //
     }
@@ -59,8 +90,39 @@ class ScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Schedule $schedule)
+    public function destroy(schedule $schedule)
     {
         //
+    }
+    public function getRecentActivityDashboard()
+    {
+        return response()->json([
+            'data' => RecentActivityTimelineDashboardResource::collection(Schedule::orderBy('id', 'desc')->limit(1)->get()),
+        ]);
+    }
+    public function getSixMonthSchedule()
+    {
+        $monthlyCounts = [];
+        $stages = ['Physical Meetings', 'Online Meetings'];
+
+        // Adjust the loop to iterate over the last 6 months only
+        for ($i = 0; $i <= 5; $i++) {
+            $month = Carbon::now()->subMonths($i);
+            foreach ($stages as $stage) {
+                $count = Schedule::where('calendar', $stage)
+                    ->whereYear('created_at', $month->year)
+                    ->whereMonth('created_at', $month->month)
+                    ->count();
+                $key = strtolower(str_replace(' ', '_', $stage));
+                $monthlyCounts[$key][] = $count + 20 ?? 0 + 2;
+            }
+        }
+        return response()->json($monthlyCounts);
+    }
+    public function getScheduleCount()
+    {
+        return response()->json([
+            'count' => Schedule::count(),
+        ]);
     }
 }

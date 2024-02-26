@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FetchPipelineData;
-use App\Helpers\StorePipelineData;
 use App\Helpers\UpdatePipelineData;
+use App\Http\Resources\ActiveProjectsDashboardResource;
 use App\Http\Resources\ColdLeadsUIPipelineResource;
 use App\Http\Resources\ContactUIPipelineResource;
 use App\Http\Resources\LeadUIPipelineResource;
 use App\Http\Resources\OpportunityUIPipelineResource;
+use App\Http\Resources\RecentDashboardProspect;
 use App\Models\Pipeline;
 use App\Models\User;
 use App\Pipes\CheckEmailExistsPipe;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PipelineController extends Controller
 {
@@ -28,7 +31,7 @@ class PipelineController extends Controller
 
             default:
                 return response()->json(['message' => 'Error fetch pipeline'], 500);
-            // break;
+                // break;
         }
     }
     public function checkEmail(Request $request)
@@ -241,18 +244,46 @@ class PipelineController extends Controller
     }
     /**
      * Store a newly created resource in storage.
+     *
+     * const baseFormData: FormData = {
+    }
      */
     public function store(Request $request)
     {
         $data = $request->all();
-        switch ($data['stage']) {
-            case 'Contact':
-                StorePipelineData::storeContactDetails($data);
-                break;
-
-            default:
-                return response()->json(['message' => 'Error creating pipeline'], 500);
-            // break;
+        $pipeline = Pipeline::create([
+            'stage' => 'Contact',
+            'name' => $data['name'],
+            'whatsapp_number' => $data['whatsapp_number'],
+            'company' => $data['company'] ?? $data['name'],
+            'department' => $data['department'],
+            'phone_number' => $data['phone_number'],
+            'product' => strtolower($data['product']),
+            'email' => $data['email'],
+            'lead_type' => strtolower($data['lead_type']),
+            'point_of_contact' => $data['point_of_contact'],
+            'tatDays' => $data['tatDays'],
+            'gender' => $data['gender'],
+            'status' => strtolower($data['status']),
+            'owner' => $data['owner'],
+            'campaign' => $data['campaign'] ?? 'Google',
+            'region' => $data['region'],
+            'industry' => $data['industry'],
+            'location' => $data['location'],
+            'priority' => $data['priority'],
+            'branch' => $data['branch'],
+            'associated_user' => $data['associated_user'],
+            'interaction_type' => $data['interaction_type'],
+            'source' => $data['source'],
+            'very_next_step' => $data['very_next_step'],
+            'note' => $data['note'],
+        ]);
+        if ($pipeline) {
+            // Log a success message or return a response
+            return response()->json(['message' => 'Opportunity created successfully'], 201);
+        } else {
+            // Log an error message or return an error response
+            return response()->json(['message' => 'Error creating opportunity'], 500);
         }
 
     }
@@ -275,8 +306,48 @@ class PipelineController extends Controller
             default:
                 return response()->json(['message' => 'Error creating pipeline'], 500);
 
-            // break;
+                // break;
         }
+    }
+    public function updatePipeline(Request $request, $id)
+    {
+        $data = $request->all();
+        $pipeline = Pipeline::whereId($id)
+            ->update([
+                'stage' => 'Contact',
+                'name' => $data['name'],
+                'company' => $data['company'] ?? $data['name'],
+                'department' => $data['department'],
+                'phone_number' => $data['phone_number'],
+                'whatsapp_number' => $data['whatsapp_number'] ?? $data['phone_number'],
+                'product' => strtolower($data['product']),
+                'email' => $data['email'],
+                'lead_type' => strtolower($data['lead_type']),
+                'point_of_contact' => $data['point_of_contact'],
+                'tatDays' => $data['tatDays'],
+                'gender' => $data['gender'],
+                'status' => strtolower($data['status']),
+                'owner' => $data['owner'],
+                'campaign' => $data['campaign'] ?? 'Google',
+                'region' => $data['region'],
+                'industry' => $data['industry'],
+                'location' => $data['location'],
+                'priority' => $data['priority'],
+                'branch' => $data['branch'],
+                'associated_user' => $data['associated_user'],
+                'interaction_type' => $data['interaction_type'],
+                'source' => $data['source'],
+                'very_next_step' => $data['very_next_step'],
+                'note' => $data['note'],
+            ]);
+        if ($pipeline) {
+            // Log a success message or return a response
+            return response()->json(['message' => 'Opportunity created successfully'], 201);
+        } else {
+            // Log an error message or return an error response
+            return response()->json(['message' => 'Error creating opportunity'], 500);
+        }
+
     }
     public function getWidgetData()
     {
@@ -328,6 +399,95 @@ class PipelineController extends Controller
         });
 
         return response()->json($widgetData);
+    }
+
+    public function recentDashboardProspect()
+    {
+        return response()->json([
+            'data' => RecentDashboardProspect::collection(Pipeline::orderBy('id', 'DESC')->limit(5)->get()),
+        ]);
+    }
+
+    public function countPipelineCreatedEachMonth()
+    {
+        $monthlyPipelineCounts = [];
+        for ($i = 0; $i <= 11; $i++) {
+            $month = Carbon::now()->subMonths($i);
+            $count = Pipeline::whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->count();
+            // $monthlyPipelineCounts[$month->format('Y-m')] = $count;
+            array_push($monthlyPipelineCounts, $count);
+        }
+        $queryResult = DB::table('pipelines')
+            ->select([
+                'status',
+                DB::raw('count(*) as count'),
+            ])
+            ->groupBy('status')
+            ->get();
+
+        return response()->json([
+            'series' => $monthlyPipelineCounts,
+            'pipelineStatusCount' => $queryResult,
+            'total' => Pipeline::count(),
+        ]);
+    }
+    public function activePipeline()
+    {
+        return response()->json([
+            'data' => ActiveProjectsDashboardResource::collection(Pipeline::orderBy('id', 'DESC')->limit(6)->get()),
+        ]);
+    }
+    public function countEachStageYearly()
+    {
+        // Initialize arrays to hold the monthly counts for each stage
+        $monthlyCounts = [
+            'contact' => [],
+            'lead' => [],
+            'opportunity' => [],
+            'closed' => [],
+        ];
+
+        // Define the stages you want to count
+        $stages = ['Contact', 'Lead', 'Opportunity', 'Closed'];
+
+        // Loop through each of the last 12 months once
+        for ($i = 0; $i <= 11; $i++) {
+            $month = Carbon::now()->subMonths($i);
+
+            // Iterate through each stage and count entries for the current month
+            foreach ($stages as $stage) {
+                $count = Pipeline::where('stage', $stage)
+                    ->whereYear('created_at', $month->year)
+                    ->whereMonth('created_at', $month->month)
+                    ->count();
+
+                // Map stage to the correct key in the monthlyCounts array
+                $key = strtolower($stage) . 's'; // Convert "Contact" to "contacts", etc.
+                $monthlyCounts[$key][] = $count ?? 0;
+            }
+        }
+
+        // Return the counts as a JSON response
+        return response()->json($monthlyCounts);
+    }
+    public function getTopProduct()
+    {
+        return response()->json([
+            'count' => Pipeline::where('product', 'vendor financing')->count(),
+        ]);
+    }
+    public function getLeadsOpportunityCount()
+    {
+        return response()->json([
+            'data' => Pipeline::select(
+                'stage',
+                DB::raw('count(*) as count'),
+            )->whereIn('stage', ['Lead', 'Opportunity'])
+                ->groupBy('stage')
+                ->get(),
+        ]);
     }
 
 }

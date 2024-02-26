@@ -21,6 +21,7 @@ class Schedule extends Model
         'allDay',
         'url',
         'extendedProps',
+        'calendar',
     ];
     protected $searchable = [
         'title',
@@ -28,6 +29,7 @@ class Schedule extends Model
         'end',
         'allDay',
         'url',
+        'calendar',
     ];
 
     /**

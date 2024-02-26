@@ -9,15 +9,7 @@ class SourceAnalysisController extends Controller
 {
     public function sourceAnalysisChannel(Request $request)
     {
-        $searchQuery = $request->query('q');
-// $stage = $request->query('stage');
-
-        $selectedStatus = $request->query('status');
         $itemsPerPage = $request->query('itemsPerPage', 15);
-        $page = $request->query('page', 1);
-        $sortBy = $request->query('sortBy', 'id');
-        $orderBy = $request->query('orderBy', 'desc');
-
         $queryResult = DB::table('pipelines')
             ->select([
                 'source',
@@ -40,6 +32,18 @@ class SourceAnalysisController extends Controller
             'to' => $queryResult->lastItem(),
         ];
 
+        return response()->json($response);
+    }
+    public function sourceAnalysisDashboardChannel()
+    {
+        $queryResult = DB::table('pipelines')
+            ->select([
+                'source',
+                DB::raw('count(*) as count'),
+            ])
+            ->groupBy('source')
+            ->get();
+        $response = ['data' => $queryResult];
         return response()->json($response);
     }
 
