@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\ExpenseManagement;
 use Illuminate\Database\Seeder;
 
 class ExpenseManagementSeeder extends Seeder
@@ -12,6 +12,6 @@ class ExpenseManagementSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        ExpenseManagement::factory()->count(5)->create();
     }
 }

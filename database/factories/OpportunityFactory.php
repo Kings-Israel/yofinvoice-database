@@ -17,7 +17,42 @@ class OpportunityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'stage' => $this->faker->randomElement([
+                'Lead',
+                'Opportunity',
+                'Cold',
+                'Reject',
+            ]),
+            'source' => $this->faker->randomElement([
+                'Email',
+                'Marketing',
+                'Outdoor',
+                'LinkedIn',
+                'Messages',
+                'Google',
+                'Adverts',
+            ]),
+            'company' => $this->faker->company,
+            'contact_name' => $this->faker->name,
+            'email' => $this->faker->safeEmail,
+            'phone_number' => $this->faker->phoneNumber,
+            'region' => $this->faker->randomElement([
+                "ICT",
+                "Healthcare",
+                "Finance and Banking",
+                "Retail",
+                "Manufacturing",
+                "Education",
+                "Transportation and Logistics",
+                "Energy and Utilities",
+                "Hospitality and Tourism",
+                "Agriculture",
+            ]),
+            'status' => $this->faker->randomElement([
+                "Initiation",
+                "Pending",
+                "Completed",
+            ]),
         ];
     }
 }
