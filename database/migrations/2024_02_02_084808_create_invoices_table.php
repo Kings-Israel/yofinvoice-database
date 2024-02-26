@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->string('remarks')->nullable();
             $table->string('attachment')->nullable();
+            $table->date('disbursement_date')->nullable();
             $table->enum('status', ['pending', 'sent', 'approved', 'denied'])->nullable()->default('pending');
             $table->enum('financing_status', ['pending', 'financed', 'denied', 'closed'])->nullable()->default('pending');
             $table->timestamps();
