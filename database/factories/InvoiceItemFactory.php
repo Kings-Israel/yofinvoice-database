@@ -16,8 +16,13 @@ class InvoiceItemFactory extends Factory
      */
     public function definition(): array
     {
+        $items = ['Oil', 'Bread', 'Flour', 'Water'];
+
         return [
-            //
+            'item' => $items[rand(0, count($items) - 1)],
+            'quantity' => rand(5, 20),
+            'unit' => 'kgs',
+            'price_per_quantity' => rand(2, 8)
         ];
     }
 }
