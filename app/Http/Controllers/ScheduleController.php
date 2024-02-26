@@ -7,7 +7,7 @@ use App\Http\Resources\RecentActivityTimelineDashboardResource;
 use App\Http\Resources\Schedule\AllFollowUpsResource;
 use App\Http\Resources\Schedule\GuestListUIResource;
 use App\Models\Pipeline;
-use App\Models\schedule;
+use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -18,6 +18,7 @@ class ScheduleController extends Controller
      */
     public function index(Request $request)
     {
+        //test
         $searchQuery = $request->query('q', '');
         $query = Schedule::query();
 
