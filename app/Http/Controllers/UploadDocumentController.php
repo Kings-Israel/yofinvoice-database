@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ComplianceDocumentResource;
 use App\Mail\DocumentUploadedSuccessfullyMail;
 use App\Mail\NotificationBankUploadedDocuments;
+use App\Models\Bank;
 use App\Models\Document;
 use App\Models\Pipeline;
 use App\Models\UploadDocument;
@@ -24,8 +25,7 @@ class UploadDocumentController extends Controller
     }
     public function getCompliance($id)
     {
-        $email = Pipeline::whereId($id)->value('email');
-        $uuid = UploadDocument::where('email', $email)->latest()->value('slug');
+        $uuid = UploadDocument::where('pipeline_id', $id)->latest()->value('slug');
         $documents = Document::where('uuid', $uuid)->get();
         return response()->json([
             'data' => ComplianceDocumentResource::collection($documents),
@@ -40,11 +40,11 @@ class UploadDocumentController extends Controller
         $documents = [];
         $email = UploadDocument::where('slug', $uuid)->value('email');
         $pipeline = Pipeline::where('email', $email)->first();
+        $bank = Bank::whereId($pipeline->id)->first();
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $path = $file->store('documents', 'public');
-
-                $result = Document::create([
+                Document::create([
                     'original_name' => $file->getClientOriginalName(),
                     'path' => $path,
                     'pipeline_id' => $pipeline->id,
@@ -52,12 +52,10 @@ class UploadDocumentController extends Controller
                     'size' => $file->getSize(),
                     'uuid' => $uuid,
                 ]);
-                info($result);
-                array_push($documents, $result->original_name);
             }
         }
         Mail::to($email)->send(new DocumentUploadedSuccessfullyMail($documents));
-        Mail::to("barry.osewe@yofinvoice.com")->send(new NotificationBankUploadedDocuments($pipeline->name, $documents));
+        Mail::to($bank->email)->send(new NotificationBankUploadedDocuments($pipeline->name, $documents));
         return response()->json([
             'message' => 'Files uploaded successfully',
         ], 200);

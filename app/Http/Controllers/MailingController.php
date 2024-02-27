@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\DocumentsUploadMail;
+use App\Models\BankDocument;
 use App\Models\Pipeline;
 use App\Models\UploadDocument;
 use Illuminate\Http\Request;
@@ -14,20 +15,26 @@ class MailingController extends Controller
 
     public function generateLink(Request $request)
     {
-        $titles = implode(', ', array_column($request->input('data'), 'title'));
-        $data = $request->input('data');
-        $id = $request->input('target');
+        $bankID = $request->input('bank');
+        $pipelineID = $request->input('pipeline');
+        $pipeline = Pipeline::whereId($pipelineID)->first();
+        $documents = BankDocument::where('bank_id', $bankID)->pluck('name');
+
         $uploadDocument = UploadDocument::create([
             'slug' => Str::uuid(),
-            'email' => Pipeline::whereId($id)->pluck('email')->implode(''),
-            'documents' => $titles,
+            'email' => $pipeline->email,
+            'pipeline_id' => $pipelineID,
+            'documents' => json_encode($documents),
         ]);
-        $pipeline = Pipeline::whereId($id)->first();
-
         $url = env('APP_FRONTEND_URL') . '/documents/' . $uploadDocument->slug;
-        Mail::to($uploadDocument->email)->send(new DocumentsUploadMail($pipeline->name, $url, $data));
+
+        Mail::to($pipeline->email)->send(new DocumentsUploadMail($pipeline->name, $url, $documents));
+        $pipeline->update([
+            'bank_id' => $bankID,
+        ]);
         return response()->json([
             "url" => $url,
+            'message' => "Uploaded",
         ]);
     }
 }
