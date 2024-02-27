@@ -24,7 +24,7 @@ class MailingController extends Controller
         ]);
         $pipeline = Pipeline::whereId($id)->first();
 
-        $url = env('APP_URL') . '/documents/' . $uploadDocument->slug;
+        $url = env('APP_FRONTEND_URL') . '/documents/' . $uploadDocument->slug;
         Mail::to($uploadDocument->email)->send(new DocumentsUploadMail($pipeline->name, $url, $data));
         return response()->json([
             "url" => $url,

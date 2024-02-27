@@ -19,7 +19,7 @@ class BankDocumentsResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'url' => $this->url,
-            'documents' => $this->bankDocuments,
+            'documents' => $this->requiredDocuments,
         ];
     }
 }

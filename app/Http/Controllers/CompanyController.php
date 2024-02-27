@@ -2,18 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Http\Resources\CompanyResource;
+use App\Http\Resources\CompanyUIResource;
+use App\Models\Company;
+use App\Models\Pipeline;
+use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $searchQuery = $request->query('q');
+        $selectedStatus = $request->query('status');
+        $itemsPerPage = $request->query('itemsPerPage', 15);
+        $page = $request->query('page', 1);
+        $sortBy = $request->query('sortBy', 'id');
+        $orderBy = $request->query('orderBy', 'asc');
+
+        $query = Company::query();
+
+        if (!is_null($searchQuery)) {
+            $query->search('%' . $searchQuery . '%');
+        }
+
+        if (!is_null($selectedStatus)) {
+            $query->where('status', $selectedStatus);
+        }
+
+        $query->orderBy($sortBy, $orderBy);
+
+        $invoices = $query->paginate($itemsPerPage, ['*'], 'page', $page);
+        $response = [
+            'data' => CompanyResource::collection($invoices),
+            'total' => $invoices->total(),
+            'currentPage' => $invoices->currentPage(),
+            'lastPage' => $invoices->lastPage(),
+        ];
+        return response()->json($response);
+
     }
 
     /**
@@ -35,9 +66,12 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Company $company)
+    public function show(string $id)
     {
-        //
+        $opportunity = Pipeline::whereId($id)->firstOrFail();
+
+        return new CompanyUIResource($opportunity);
+
     }
 
     /**
