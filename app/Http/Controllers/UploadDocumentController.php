@@ -53,8 +53,8 @@ class UploadDocumentController extends Controller
                 ]);
             }
         }
-        Mail::to($uploadedDocuments->email)->send(new DocumentUploadedSuccessfullyMail($uploadedDocuments->documents));
-        Mail::to($bank->email)->send(new NotificationBankUploadedDocuments($pipeline->name, $uploadedDocuments->documents));
+        Mail::to($uploadedDocuments->email)->send(new DocumentUploadedSuccessfullyMail(json_decode($uploadedDocuments->documents)));
+        Mail::to($bank->email)->send(new NotificationBankUploadedDocuments($pipeline->name, json_decode($uploadedDocuments->documents)));
         return response()->json([
             'message' => 'Files uploaded successfully',
         ], 200);

@@ -261,7 +261,7 @@ class PipelineController extends Controller
             'product' => strtolower($data['product']),
             'email' => $data['email'],
             'lead_type' => strtolower($data['lead_type']),
-            'point_of_contact' => $data['point_of_contact'],
+            'point_of_contact' => $data['point_of_contact'] ?? $data['owner'],
             'tatDays' => $data['tatDays'],
             'gender' => $data['gender'],
             'status' => strtolower($data['status']),
@@ -275,7 +275,7 @@ class PipelineController extends Controller
             'associated_user' => $data['associated_user'],
             'interaction_type' => $data['interaction_type'],
             'source' => $data['source'],
-            'very_next_step' => $data['very_next_step'],
+            'very_next_step' => $data['very_next_step'] ?? 'Call',
             'note' => $data['note'],
         ]);
         if ($pipeline) {
