@@ -35,7 +35,7 @@ class FetchBanksDocumentsController extends Controller
     }
     public function getBankDocuments()
     {
-        $bankDocuments = Bank::with('bankDocuments')->get();
+        $bankDocuments = Bank::with('requiredDocuments')->get();
         return response()->json([
             'data' => BankDocumentsResource::collection($bankDocuments),
         ]);

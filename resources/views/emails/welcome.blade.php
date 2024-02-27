@@ -51,11 +51,11 @@
             <p>Attached is the link to upload the required documents <a href="{{ $documentsLink }}">
                     <strong>HERE</strong></a> page.</p>
             <h5> The documents include</h5>
-            @forelse ($documents as $value )
-            <li><strong>{{ $value['title'] }}</strong></li>
-            @empty
-            <li><strong>An Error Occurred</strong></li>
-            @endforelse
+            @foreach ($documents as $document )
+            <li><strong>{{ $document }}</strong></li>
+
+            @endforeach
+
             <p>If you have any questions or need assistance, don't hesitate to reach out to our support team or visit
                 our <a href="{{ env('APP_URL') }}">Support Center</a>.</p>
             <p>Thank you for choosing us,</p>

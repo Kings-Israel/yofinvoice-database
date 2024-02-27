@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class UploadDocument extends Model
 {
     use HasFactory;
+    protected $guarded = [''];
+    protected $casts = [
+        'documents' => 'array',
+    ];
 }
