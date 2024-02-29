@@ -15,6 +15,7 @@ class Schedule extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'pipeline_id',
         'title',
         'start',
         'end',
@@ -24,6 +25,7 @@ class Schedule extends Model
         'calendar',
     ];
     protected $searchable = [
+        'pipeline_id',
         'title',
         'start',
         'end',

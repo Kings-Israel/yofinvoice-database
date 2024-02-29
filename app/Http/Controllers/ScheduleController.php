@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityHelper;
 use App\Http\Requests\UpdatescheduleRequest;
 use App\Http\Resources\RecentActivityTimelineDashboardResource;
 use App\Http\Resources\Schedule\AllFollowUpsResource;
@@ -51,8 +52,15 @@ class ScheduleController extends Controller
     public function store(Request $request)
     {
         $props = $request->input('extendedProps');
+        $title = $request->input('title');
+        $pipeline = [];
+        if (is_numeric($title)) {
+            $pipeline = Pipeline::whereId($title)->first();
+        }
+        info($request->all());
         $event = Schedule::create([
-            'title' => $request->input('title'),
+            'title' => !is_numeric($title) ? $title : "Meeting with " . $pipeline->name,
+            'pipeline_id' => is_numeric($title) ? $title : 0,
             'start' => $request->input('start'),
             'end' => $request->input('end'),
             'allDay' => $request->input('allDay'),
@@ -60,7 +68,22 @@ class ScheduleController extends Controller
             'calendar' => $props['calendar'],
             'extendedProps' => $props,
         ]);
-        return response()->json($event, 201);
+        if ($event) {
+            ActivityHelper::logActivity([
+                'subject_type' => "Creating an event",
+                "stage" => "Schedule",
+                "section" => "Event",
+                "pipeline_id" => $event->id,
+                'user_id' => $event->id,
+                'description' => "Creating a new event",
+                'properties' => $event,
+            ]);
+
+            return response()->json($event, 201);
+        }
+        return response()->json([
+            "message" => "An error occurred",
+        ], 500);
 
     }
 

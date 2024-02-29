@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,8 +17,6 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
-        info($user);
-        info(Hash::check($request->password, $user->password));
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'errors' => [
@@ -33,15 +32,22 @@ class AuthController extends Controller
                 'subject' => 'all',
             ],
         ];
-        info(json_encode($user));
-
         $user->makeHidden(['password', 'remember_token']);
-
         $userDetails = $user->toArray();
         $userDetails['abilityRules'] = $abilityRules;
         $userDetails['role'] = 'admin';
         $userDetails['avatar'] = asset('images/avatars/yofinvoice.png');
         $userDetails['username'] = str_replace(' ', '', $user->name);
+
+        ActivityHelper::logActivity([
+            'subject_type' => "UserAction",
+            "stage" => "Login",
+            "section" => "Login",
+            "pipeline_id" => $user->id,
+            'user_id' => $user->id,
+            'description' => $user->name . " logged in at " . now(),
+            'properties' => $abilityRules,
+        ]);
 
         return response()->json([
             'accessToken' => $token,

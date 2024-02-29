@@ -76,6 +76,10 @@ Route::get('/get/UI/dashboard/lead/opportunity', [PipelineController::class, 'ge
 Route::get('/get/UI/pipeline/cold', [PipelineController::class, 'coldDetails'])->name('get.UI.pipeline.coldDetails');
 Route::get('/get/UI/top/product', [PipelineController::class, 'getTopProduct'])->name('get.top.products');
 Route::post('/check/email', [PipelineController::class, 'checkEmail'])->name('get.UI.check.email.exists');
+Route::get('/get/lead/names', function () {
+    return response()->json(Pipeline::select('id', 'name')->get());
+
+})->name('get.lead.names');
 Route::post('/mark/UI/pipeline/hot/{id}', function ($id) {
     return Pipeline::whereId($id)->update(['status' => 'hot']);
 });

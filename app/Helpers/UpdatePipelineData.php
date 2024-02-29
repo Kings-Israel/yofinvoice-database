@@ -17,9 +17,18 @@ class UpdatePipelineData
                 'branch' => $data['branch'],
                 'status' => $data['status'],
             ]);
-        info(json_encode($pipeline));
         if ($pipeline) {
-            // Log a success message or return a response
+            $pipelinData = Pipeline::whereId($id)->first();
+            ActivityHelper::logActivity([
+                'subject_type' => "Converting to a Lead",
+                "stage" => $pipelinData->stage,
+                "section" => $pipelinData->stage,
+                "pipeline_id" => $id,
+                'user_id' => $id,
+                'description' => "Converted the following to a lead",
+                'properties' => $pipelinData,
+            ]);
+
             return response()->json(['message' => 'Opportunity created successfully'], 201);
         } else {
             // Log an error message or return an error response
@@ -40,7 +49,17 @@ class UpdatePipelineData
                 'very_next_step' => $data['status'],
             ]);
         if ($pipeline) {
-            // Log a success message or return a response
+            $pipelinData = Pipeline::whereId($id)->first();
+            ActivityHelper::logActivity([
+                'subject_type' => "Converting to an opportunity",
+                "stage" => $pipelinData->stage,
+                "section" => $pipelinData->stage,
+                "pipeline_id" => $id,
+                'user_id' => $id,
+                'description' => "Converted the following to a opportunity",
+                'properties' => $pipelinData,
+            ]);
+
             return response()->json(['message' => 'Opportunity created successfully'], 201);
         } else {
             // Log an error message or return an error response

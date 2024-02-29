@@ -12,18 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('subject_type')->nullable();
+            $table->string('stage')->nullable();
+            $table->string('section');
             $table->foreignIdFor(Pipeline::class)->nullable();
-            $table->dateTime('start');
-            $table->dateTime('end')->nullable();
-            $table->boolean('allDay')->default(0);
-            $table->string('url')->nullable();
-            $table->string('calendar')->nullable();
-            $table->json('extendedProps')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('description');
+            $table->json('properties')->nullable();
             $table->timestamps();
-
         });
     }
 
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('activities');
     }
 };

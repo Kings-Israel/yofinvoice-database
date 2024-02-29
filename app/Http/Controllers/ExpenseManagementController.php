@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityHelper;
 use App\Http\Resources\ExpenseManagementResource;
 use App\Models\ExpenseManagement;
 use Illuminate\Http\Request;
@@ -69,7 +70,6 @@ class ExpenseManagementController extends Controller
             // Move the file to the destination path
             $file->move($destinationPath, $fileName);
         }
-        info($request->all());
         $result = ExpenseManagement::create([
             'lead_name' => $request->input('leadName'),
             'document' => $fileName, // Use the processed file name
@@ -78,6 +78,16 @@ class ExpenseManagementController extends Controller
             'amount' => $request->input('amount'),
             'notes' => $request->input('notes'),
             'status' => 'pending',
+        ]);
+
+        ActivityHelper::logActivity([
+            'subject_type' => "Expense Management",
+            "stage" => "Expense Management",
+            "section" => "Expense Management",
+            "pipeline_id" => $result->id,
+            'user_id' => $request->input("user_id"),
+            'description' => "Request for lead name" . $result->lead_name,
+            'properties' => $result,
         ]);
 
         if ($result) {
