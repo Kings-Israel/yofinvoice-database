@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pipelines', function (Blueprint $table) {
             $table->id();
-            $table->enum('stage', ['Contact', 'Lead', 'Opportunity', 'Cold', 'Reject'])->default('Contact');
+            $table->enum('stage', ['Contact', 'Lead', 'Opportunity', 'Cold', 'Reject', 'Closed'])->default('Contact');
             $table->string('name');
             $table->string('company');
             $table->integer('tatDays')->default(0);

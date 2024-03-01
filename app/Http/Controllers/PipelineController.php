@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityHelper;
 use App\Helpers\FetchPipelineData;
 use App\Helpers\UpdatePipelineData;
 use App\Http\Resources\ActiveProjectsDashboardResource;
@@ -182,7 +183,7 @@ class PipelineController extends Controller
         $sortBy = $request->query('sortBy', 'id');
         $orderBy = $request->query('orderBy', 'desc');
 
-        $query = Pipeline::where('stage', 'closed');
+        $query = Pipeline::where('stage', 'Closed');
 
         if (!is_null($searchQuery)) {
             // Assuming 'searchQuery' applies to a specific field or set of fields
@@ -238,7 +239,6 @@ class PipelineController extends Controller
             'currentPage' => $invoices->currentPage(),
             'lastPage' => $invoices->lastPage(),
         ];
-        info(json_encode($response));
         return response()->json($response);
 
     }
@@ -279,6 +279,16 @@ class PipelineController extends Controller
             'note' => $data['note'],
         ]);
         if ($pipeline) {
+            ActivityHelper::logActivity([
+                'subject_type' => "Storing an Pipeline",
+                "stage" => "Pipeline",
+                "section" => $pipeline->stage,
+                "pipeline_id" => $pipeline->id,
+                'user_id' => $pipeline->id,
+                'description' => "Storing an pipeline",
+                'properties' => $pipeline,
+            ]);
+
             // Log a success message or return a response
             return response()->json(['message' => 'Opportunity created successfully'], 201);
         } else {
@@ -341,6 +351,16 @@ class PipelineController extends Controller
                 'note' => $data['note'],
             ]);
         if ($pipeline) {
+            ActivityHelper::logActivity([
+                'subject_type' => "Updating a Pipeline",
+                "stage" => "Pipeline",
+                "section" => $pipeline->stage,
+                "pipeline_id" => $pipeline->id,
+                'user_id' => $pipeline->id,
+                'description' => "Updating a pipeline",
+                'properties' => $pipeline,
+            ]);
+
             // Log a success message or return a response
             return response()->json(['message' => 'Opportunity created successfully'], 201);
         } else {
@@ -478,6 +498,7 @@ class PipelineController extends Controller
             'count' => Pipeline::where('product', 'vendor financing')->count(),
         ]);
     }
+
     public function getLeadsOpportunityCount()
     {
         return response()->json([

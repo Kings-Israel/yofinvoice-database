@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityHelper;
 use App\Mail\DocumentsUploadMail;
 use App\Models\BankDocument;
 use App\Models\Pipeline;
@@ -32,6 +33,16 @@ class MailingController extends Controller
         $pipeline->update([
             'bank_id' => $bankID,
         ]);
+        ActivityHelper::logActivity([
+            'subject_type' => "Document",
+            "stage" => "Emailing Documents Link",
+            "section" => "Emailing Documents",
+            "pipeline_id" => $pipelineID,
+            'user_id' => $pipelineID,
+            'description' => "Request for lead name" . $url,
+            'properties' => $uploadDocument,
+        ]);
+
         return response()->json([
             "url" => $url,
             'message' => "Uploaded",
