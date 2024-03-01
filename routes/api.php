@@ -11,6 +11,7 @@ use App\Http\Controllers\PipelineController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SourceAnalysisController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UploadDocumentController;
@@ -34,6 +35,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/dashboard/opportunities', [OpportunityController::class, 'index'])->name('UI.dashboard.opportunities');
+Route::get('/app/bar/search', [SearchController::class, 'search'])->name('UI.app.bar.search');
 Route::get('/closed/deals', [OpportunityController::class, 'closedDeals'])->name('UI.dashboard.closed.deals');
 Route::get('/cold/deals', [OpportunityController::class, 'coldDeals'])->name('UI.dashboard.cold.deals');
 Route::get('/other/sourcing/channels', [SourceAnalysisController::class, 'sourceAnalysisChannel'])->name('UI.sourcing.channels');
