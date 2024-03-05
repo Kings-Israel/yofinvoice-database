@@ -41,4 +41,12 @@ class Bank extends Model
     {
         return $this->hasMany(BankDocument::class);
     }
+
+    /**
+     * Get all of the paymentAccounts for the Bank
+     */
+    public function paymentAccounts(): HasMany
+    {
+        return $this->hasMany(BankPaymentAccount::class);
+    }
 }
