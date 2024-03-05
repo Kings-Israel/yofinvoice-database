@@ -69,14 +69,6 @@ class Program extends Model
     }
 
     /**
-     * Get all of the anchorDetails for the Program
-     */
-    public function anchorDetails(): HasMany
-    {
-        return $this->hasMany(ProgramAnchorDetails::class);
-    }
-
-    /**
      * Get all of the bankUserDetails for the Program
      */
     public function bankUserDetails(): HasMany
