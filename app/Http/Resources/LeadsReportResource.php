@@ -24,7 +24,7 @@ class LeadsReportResource extends JsonResource
             'pointOfContact' => $this->point_of_contact,
             'schedules' => AllFollowUpsResource::collection($this->whenLoaded('Schedules')),
             'CreationDate' => $this->whenLoaded('CreationDate') ? $this->CreationDate->created_at->format('d-M-y') : now(),
-            'tatDays' => $this->getTatDays($this->CreationDate->created_at),
+            'tatDays' => $this->getTatDays($this->whenLoaded('CreationDate') ? $this->CreationDate->created_at->format('d-M-y') : now()),
         ];
     }
 
