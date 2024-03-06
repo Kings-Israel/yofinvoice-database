@@ -6,11 +6,14 @@ use App\Helpers\ActivityHelper;
 use App\Helpers\FetchPipelineData;
 use App\Helpers\UpdatePipelineData;
 use App\Http\Resources\ActiveProjectsDashboardResource;
+use App\Http\Resources\ClosedDealsReportResource;
 use App\Http\Resources\ColdLeadsUIPipelineResource;
 use App\Http\Resources\ContactUIPipelineResource;
+use App\Http\Resources\LeadsReportResource;
 use App\Http\Resources\LeadUIPipelineResource;
 use App\Http\Resources\OpportunityUIPipelineResource;
 use App\Http\Resources\RecentDashboardProspect;
+use App\Models\Activity;
 use App\Models\Pipeline;
 use App\Models\User;
 use App\Pipes\CheckEmailExistsPipe;
@@ -175,7 +178,6 @@ class PipelineController extends Controller
     public function closedDetails(Request $request)
     {
         $searchQuery = $request->query('q');
-        $stage = $request->query('stage');
 
         $selectedStatus = $request->query('status');
         $itemsPerPage = $request->query('itemsPerPage', 15);
@@ -188,10 +190,6 @@ class PipelineController extends Controller
         if (!is_null($searchQuery)) {
             // Assuming 'searchQuery' applies to a specific field or set of fields
             $query->search('%' . $searchQuery . '%');
-        }
-        if (!is_null($stage)) {
-            // Assuming 'searchQuery' applies to a specific field or set of fields
-            $query->where('stage', 'like', '%' . $stage . '%');
         }
 
         if (!is_null($selectedStatus)) {
@@ -510,5 +508,182 @@ class PipelineController extends Controller
                 ->get(),
         ]);
     }
+    public function getPipelineCount()
+    {
+        return response()->json(Pipeline::select(
+            'stage',
+            DB::raw('count(*) as count'),
+        )->groupBy('stage')
+                ->get());
+    }
 
+    public function getLeadsReport(Request $request)
+    {
+        $searchQuery = $request->query('q', '');
+        $query = Pipeline::with(['Schedules', 'CreationDate']);
+
+        if (!is_null($searchQuery)) {
+            // Assuming 'searchQuery' applies to a specific field or set of fields
+            $query->search('%' . $searchQuery . '%');
+        }
+
+        return response()->json(LeadsReportResource::collection($query->where('stage', 'Lead')->get()));
+    }
+    public function productReport(Request $request)
+    {
+
+        $searchQuery = $request->query('q');
+        $selectedStatus = $request->query('status');
+        $itemsPerPage = $request->query('itemsPerPage', 15);
+        $page = $request->query('page', 1);
+        $sortBy = $request->query('sortBy', 'id');
+        $orderBy = $request->query('orderBy', 'desc');
+        $query = Pipeline::query();
+        if (!is_null($searchQuery)) {
+            // Assuming 'searchQuery' applies to a specific field or set of fields
+            $query->search('%' . $searchQuery . '%');
+        }
+
+        if (!is_null($selectedStatus)) {
+            $query->where('product', $selectedStatus);
+        }
+
+        $query->orderBy($sortBy, $orderBy);
+        $invoices = $query->paginate($itemsPerPage, ['*'], 'page', $page);
+        $response = [
+            'data' => ContactUIPipelineResource::collection($invoices),
+            'total' => $invoices->total(),
+            'currentPage' => $invoices->currentPage(),
+            'lastPage' => $invoices->lastPage(),
+        ];
+        return response()->json($response);
+
+    }
+
+    public function getClosedDealsReports()
+    {
+        return response()->json(ClosedDealsReportResource::collection(Pipeline::with('ClosedActivity')->where('stage', 'Closed')->get()));
+    }
+
+    public function getWidgetReportData()
+    {
+        $stageCounts = Pipeline::selectRaw("
+        SUM(product = 'dealer financing') as dealer_financing,
+        SUM(product = 'vendor financing') as vendor_financing
+    ")->first();
+
+        $widgetData = collect([
+            ['value' => 'Dealer Financing', 'title' => $stageCounts->dealer_financing ?? 0],
+            ['value' => 'Vendor Financing', 'title' => $stageCounts->vendor_financing ?? 0],
+            ['value' => 'Closed Deals', 'title' => Pipeline::where('stage', 'Closed')->count() ?? 0],
+        ]);
+
+        $iconMap = [
+            'Dealer Financing' => 'tabler-leaf',
+            'Vendor Financing' => 'tabler-pencil-bolt',
+            'Closed Deals' => 'tabler-clock-hour-12',
+        ];
+
+        $colorsMap = [
+            'Dealer Financing' => 'primary',
+            'Vendor Financing' => 'info',
+            'Closed Deals' => 'warning',
+        ];
+
+        $widgetData = $widgetData->map(function ($item) use ($iconMap, $colorsMap) {
+            $item['icon'] = $iconMap[$item['value']];
+            $item['color'] = $colorsMap[$item['value']];
+            return $item;
+        });
+
+        return response()->json($widgetData);
+    }
+
+    public function getCountPipelineWithinAPeriod(Request $request)
+    {
+        $dateRange = $request->input('date', '');
+        $startDateCarbon = null;
+        $endDateCarbon = null;
+
+        if (!empty($dateRange)) {
+            if (strpos($dateRange, ' to ') !== false) {
+                [$startDate, $endDate] = explode(" to ", $dateRange);
+                $startDateCarbon = Carbon::parse($startDate);
+                $endDateCarbon = Carbon::parse($endDate)->endOfDay(); // Ensure full day coverage
+                info("Start Date: " . $startDateCarbon);
+                info("End Date: " . $endDateCarbon);
+            } else {
+                $startDateCarbon = Carbon::parse($dateRange);
+                $endDateCarbon = Carbon::now()->endOfMonth(); // Assuming you want to end at the current month's end if only start date is given
+                info("Start Date: " . $startDateCarbon);
+                info("End Date: " . $endDateCarbon);
+            }
+        }
+
+        // Adjust your query to filter by the date range if both dates are defined
+        $query = Activity::query();
+
+        if ($startDateCarbon && $endDateCarbon) {
+            $query->whereBetween('created_at', [$startDateCarbon, $endDateCarbon]);
+        }
+
+        $stageCounts = $query->selectRaw("
+        SUM(section = 'Contact') as contact_count,
+        SUM(section = 'Lead') as lead_count,
+        SUM(section = 'Opportunity') as opportunity_count,
+        SUM(section = 'Closed') as closed_count")->first();
+
+        $widgetData = collect([
+            ['title' => 'Contacts', 'value' => $stageCounts->contact_count ?? 0],
+            ['title' => 'Leads', 'value' => $stageCounts->lead_count ?? 0],
+            ['title' => 'Opportunities', 'value' => $stageCounts->opportunity_count ?? 0],
+            ['title' => 'Closed', 'value' => $stageCounts->closed_count ?? 0], // Corrected 'cold_count' to 'closed_count'
+        ]);
+
+        $colorsMap = [
+            'Contacts' => 'secondary',
+            'Leads' => 'info',
+            'Opportunities' => 'primary',
+            'Closed' => 'success',
+        ];
+
+        $widgetData = $widgetData->map(function ($item) use ($colorsMap) {
+            $item['color'] = $colorsMap[$item['title']];
+            return $item;
+        });
+
+        return response()->json($widgetData);
+    }
+    public function getProductCounts()
+    {
+        $productsCount = Pipeline::selectRaw("
+        SUM(product = 'vendor financing') as vendor,
+        SUM(product = 'dealer financing') as dealer,
+        COUNT(*) as count
+    ")->first();
+        $widgetData = collect([
+            ['title' => 'Vendor Financing', 'value' => $productsCount->vendor ?? 0],
+            ['title' => 'Dealer Financing', 'value' => $productsCount->dealer ?? 0],
+            ['title' => 'Total', 'value' => $productsCount->count ?? 0],
+        ]);
+
+        $colorsMap = [
+            'Vendor Financing' => 'secondary',
+            'Dealer Financing' => 'info',
+            'Total' => 'primary',
+        ];
+        $iconMap = [
+            'Vendor Financing' => 'tabler-phone-call',
+            'Dealer Financing' => 'tabler-direction-sign',
+            'Total' => 'tabler-chart-candle-filled',
+        ];
+
+        $widgetData = $widgetData->map(function ($item) use ($iconMap, $colorsMap) {
+            $item['color'] = $colorsMap[$item['title']];
+            $item['icon'] = $iconMap[$item['title']];
+            return $item;
+        });
+
+        return response()->json($widgetData);
+    }
 }

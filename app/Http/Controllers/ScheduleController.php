@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ActivityHelper;
-use App\Http\Requests\UpdatescheduleRequest;
 use App\Http\Resources\RecentActivityTimelineDashboardResource;
 use App\Http\Resources\Schedule\AllFollowUpsResource;
 use App\Http\Resources\Schedule\GuestListUIResource;
@@ -11,6 +10,7 @@ use App\Models\Pipeline;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends Controller
 {
@@ -19,7 +19,6 @@ class ScheduleController extends Controller
      */
     public function index(Request $request)
     {
-        //test
         $searchQuery = $request->query('q', '');
         $query = Schedule::query();
 
@@ -37,13 +36,6 @@ class ScheduleController extends Controller
         return response()->json([
             'data' => GuestListUIResource::collection(Pipeline::all()),
         ]);
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -86,38 +78,6 @@ class ScheduleController extends Controller
         ], 500);
 
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(schedule $schedule)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(schedule $schedule)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatescheduleRequest $request, schedule $schedule)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(schedule $schedule)
-    {
-        //
-    }
     public function getRecentActivityDashboard()
     {
         return response()->json([
@@ -148,5 +108,26 @@ class ScheduleController extends Controller
         return response()->json([
             'count' => Schedule::count(),
         ]);
+    }
+
+    public function getWeeklyCollectionMeeting()
+    {
+        $weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        $hoursPerWeekday = Schedule::query()
+            ->select([
+                DB::raw('DAYNAME(start) as weekday'),
+                DB::raw('LEAST(SUM(TIMESTAMPDIFF(HOUR, start, end)), 7) as total_hours'),
+            ])
+            ->whereRaw('DAYOFWEEK(start) BETWEEN 2 AND 6')
+            ->groupBy(DB::raw('DAYNAME(start)'))
+            ->get()
+            ->pluck('total_hours', 'weekday');
+        $weekdaysWithHours = collect($weekdays)->mapWithKeys(function ($weekday) use ($hoursPerWeekday) {
+            return [$weekday => (int) $hoursPerWeekday->get($weekday, 0)];
+        });
+
+        return response()->json($weekdaysWithHours);
+
     }
 }

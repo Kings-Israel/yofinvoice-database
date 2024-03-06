@@ -17,11 +17,13 @@ class ContactUIPipelineResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'stage' => $this->stage,
             'company' => $this->company,
             'department' => $this->department,
             'email' => $this->email,
             'source' => $this->source,
             'status' => $this->status,
+            'product' => $this->product,
         ];
     }
 }
