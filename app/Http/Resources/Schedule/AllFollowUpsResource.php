@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Schedule;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,6 +22,7 @@ class AllFollowUpsResource extends JsonResource
             'end' => $this->end,
             'allDay' => $this->allDay,
             'url' => $this->url,
+            'expired' => Carbon::parse($this->end)->isPast() ? 'expired' : 'active',
             'extendedProps' => [
                 'guests' => $this->extendedProps['guests'] ?? [],
                 'location' => $this->extendedProps['location'] ?? '',
