@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProgramTypeRequest;
-use App\Http\Requests\UpdateProgramTypeRequest;
-use App\Models\ProgramType;
+use App\Models\AccessRights;
+use App\Http\Requests\StoreAccessRightsRequest;
+use App\Http\Requests\UpdateAccessRightsRequest;
 
-class ProgramTypeController extends Controller
+class AccessRightsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-
+        //
     }
 
     /**
@@ -27,7 +27,7 @@ class ProgramTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProgramTypeRequest $request)
+    public function store(StoreAccessRightsRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class ProgramTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProgramType $programType)
+    public function show(AccessRights $accessRights)
     {
         //
     }
@@ -43,7 +43,7 @@ class ProgramTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProgramType $programType)
+    public function edit(AccessRights $accessRights)
     {
         //
     }
@@ -51,7 +51,7 @@ class ProgramTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProgramTypeRequest $request, ProgramType $programType)
+    public function update(UpdateAccessRightsRequest $request, AccessRights $accessRights)
     {
         //
     }
@@ -59,7 +59,7 @@ class ProgramTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProgramType $programType)
+    public function destroy(AccessRights $accessRights)
     {
         //
     }

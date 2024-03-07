@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProgramTypeRequest;
-use App\Http\Requests\UpdateProgramTypeRequest;
-use App\Models\ProgramType;
+use App\Http\Requests\StoreRoleTypeRequest;
+use App\Http\Requests\UpdateRoleTypeRequest;
+use App\Models\RoleType;
 
-class ProgramTypeController extends Controller
+class RoleTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        return response()->json(RoleType::with('Groups.AccessGroups')->get());
 
     }
 
@@ -27,7 +28,7 @@ class ProgramTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProgramTypeRequest $request)
+    public function store(StoreRoleTypeRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class ProgramTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProgramType $programType)
+    public function show(RoleType $roleType)
     {
         //
     }
@@ -43,7 +44,7 @@ class ProgramTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProgramType $programType)
+    public function edit(RoleType $roleType)
     {
         //
     }
@@ -51,7 +52,7 @@ class ProgramTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProgramTypeRequest $request, ProgramType $programType)
+    public function update(UpdateRoleTypeRequest $request, RoleType $roleType)
     {
         //
     }
@@ -59,7 +60,7 @@ class ProgramTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProgramType $programType)
+    public function destroy(RoleType $roleType)
     {
         //
     }

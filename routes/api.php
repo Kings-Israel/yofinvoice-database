@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ExpenseManagementController;
 use App\Http\Controllers\FetchBanksDocumentsController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\PipelineController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SourceAnalysisController;
@@ -103,7 +105,6 @@ Route::get('/compliance/uuid/documents/{email}', [UploadDocumentController::clas
 Route::get('/invoice/UI/request', [InvoiceController::class, 'index'])->name('UI.dashboard.invoices.request');
 Route::get('/all/UI/program', [ProgramController::class, 'index'])->name('UI.dashboard.programs');
 Route::get('/all/UI/transactions', [TransactionController::class, 'index'])->name('UI.dashboard.transactions');
-Route::get('/all/UI/companies', [CompanyController::class, 'index'])->name('UI.dashboard.companies');
 
 //Schedules
 Route::get('/get/UI/invited/guest', [ScheduleController::class, 'getGuestList'])->name('UI.gets.invited');
@@ -121,3 +122,18 @@ Route::get('/get/latest/schedule', function () {
 //Users
 Route::get('/users/UI/list', [UserController::class, 'index'])->name('users.UI.list');
 Route::post('/add/UI/user', [UserController::class, 'store'])->name('add.UI.user');
+
+//Companies
+Route::get('/all/UI/companies', [CompanyController::class, 'index'])->name('UI.dashboard.companies');
+
+// Route::get('/get/UI/companies', [CompanyController::class, 'index'])->name('get.UI.companies');
+
+//Bank
+
+Route::get('/UI/get/banks', [BankController::class, 'index'])->name('UI.get.banks');
+Route::post('/UI/new/bank', [BankController::class, 'store'])->name('UI.new.bank');
+Route::post('/UI/bank/email/check', [BankController::class, 'checkEmail'])->name('UI.bank.email.check');
+
+//Roles
+
+Route::get('/UI/roles/permissions', [RoleTypeController::class, 'index'])->name('UI.roles.permissions');

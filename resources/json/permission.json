@@ -1,0 +1,341 @@
+{
+    "permissions": [
+        {
+            "type": "Bank",
+            "groups": [
+                {
+                    "name": "Edit",
+                    "roles": [
+                        "Edit Fees"
+                    ]
+                },
+                {
+                    "name": "Configuration Management",
+                    "roles": [
+                        "View Product Configurations",
+                        "Manage Product Configurations",
+                        "Approve Product Configurations",
+                        "Manage Holidays",
+                        "API Access Token",
+                        "Bank Configuration Batchjob",
+                        "Remark Message List",
+                        "View Base Rates",
+                        "Manage Base Rates",
+                        "Edit Base Rates",
+                        "View Taxes",
+                        "Manage Taxes",
+                        "Manage Branches",
+                        "Manage Industries",
+                        "Manage Geo Locations",
+                        "Manage Company Classification",
+                        "Manage Platform Configurations",
+                        "Manage Email Templates",
+                        "Manage Currencies",
+                        "Manage Attachments",
+                        "View Fees",
+                        "Manage Fees",
+                        "Manage Sub Industries",
+                        "Manage Business Types",
+                        "Upload TDS Certificate",
+                        "TDS Certificate Checker",
+                        "Manage Pool Accounts"
+                    ]
+                },
+                {
+                    "name": "User Management",
+                    "roles": [
+                        "View Users",
+                        "Add/Edit Users",
+                        "Activate/Deactivate Users",
+                        "Users Changes Checker",
+                        "Manage Roles"
+                    ]
+                },
+                {
+                    "name": "Company Management",
+                    "roles": [
+                        "View Companies",
+                        "Company Bulk Approve",
+                        "Add/Edit Companies",
+                        "View Company Users",
+                        "Activate/Deactivate Companies",
+                        "Block/Unblock Companies",
+                        "Company Changes Checker",
+                        "Manage Authorization Group",
+                        "Upload Companies",
+                        "Manage Authorization Matrix"
+                    ]
+                },
+                {
+                    "name": "Program Management",
+                    "roles": [
+                        "View Programs & Mapping",
+                        "Add/Edit Program & Mapping",
+                        "Activate/Deactivate Program & Mapping",
+                        "Program Changes Checker",
+                        "Upload Programs",
+                        "Bulk Program Changes Checker",
+                        "Program Mapping Bulk Approve",
+                        "Upload Mapping"
+                    ]
+                },
+                {
+                    "name": "Invoice Financing",
+                    "roles": [
+                        "View Vendor Financing Requests",
+                        "Approve Vendor Financing Requests Level 1",
+                        "Approve Vendor Financing Requests Level 2",
+                        "Initiate Repayment for Vendor Finance",
+                        "Initiate Drawdowns",
+                        "Upload Financing Requests",
+                        "Discount Request Changes Checker",
+                        "Upload VF Transactions"
+                    ]
+                },
+                {
+                    "name": "Distributor Financing (Overdraft)",
+                    "roles": [
+                        "View Dealer Financing Requests",
+                        "Approve Dealer Financing Requests Level 1",
+                        "Approve Dealer Financing Requests Level 2",
+                        "View OD AccountsInitiate Drawdowns",
+                        "Upload PIs",
+                        "Add/Debit Funds in OD Accounts",
+                        "Upload Financing Requests",
+                        "DF Debit/Credit/Changes Checker",
+                        "Upload DF Transactions"
+                    ]
+                },
+                {
+                    "name": "Payment Management",
+                    "roles": [
+                        "View Payment Requests",
+                        "View CBS Transactions",
+                        "Run CBS Batch Job Manually",
+                        "Update CBS Transaction",
+                        "Initiate Transaction",
+                        "CBS Transactions List",
+                        "View CBS Transactions With Pool Accounts",
+                        "View Payments With Pool Accounts"
+                    ]
+                },
+                {
+                    "name": "Reporting",
+                    "roles": [
+                        "View Trial Balance Report",
+                        "View Anchorwise Distributors Report",
+                        "View Anchorwise Vendor Report",
+                        "View Cron Logs",
+                        "View Failed CBS transaction Report",
+                        "View IF - Funding Limits Utilization Report",
+                        "View Inactive Users List",
+                        "View Payments Pending Approval Report",
+                        "View Payments Pending Disbursal Report",
+                        "View Payments Report",
+                        "View Maturing Payments Report",
+                        "View Maturity Extended Report",
+                        "View Payments",
+                        "View Rejected Payments Report",
+                        "View User Activity Log Report",
+                        "View User ID Maintenance History Report",
+                        "View Users and Roles Report",
+                        "View DF - Collection Report",
+                        "cash colletereal Report",
+                        "PF - Report",
+                        "PF and CC Report",
+                        "View DF - Drawdown Details Report",
+                        "View DF - Funding Limits Utilization Report",
+                        "View DF - Income Report",
+                        "View Distributor Limit Utilization Report",
+                        "View DF - Monthly Utilization & Outstanding Report",
+                        "View DF - OD Ledger Report",
+                        "View DF - Overdue Report",
+                        "View DF - Potential Financing Report",
+                        "DF - Fees/Charges & Interest Sharing Report",
+                        "View DF - Program Mapping Report",
+                        "View DF - Programs ReportView IF - Income Report",
+                        "View IF - Overdue Invoices Report",
+                        "View IF - Potential Financing Report",
+                        "View IF - Payment Details Report",
+                        "IF - Fees/Charges & Interest Sharing Report",
+                        "View IF - Programs Report",
+                        "View IF - Program Mapping Report",
+                        "Vendor's Daily Outstanding Balance",
+                        "View IF - Vendor Classification Report",
+                        "View DF - Dealer Classification Report",
+                        "View VF - Repayment Details Report",
+                        "Reconciliation Report"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Anchor",
+            "groups": [
+                {
+                    "name": "Configuration Management",
+                    "roles": [
+                        "View Configurations",
+                        "Update Configurations",
+                        "Manage Vendor Settings",
+                        "Manage Attachments"
+                    ]
+                },
+                {
+                    "name": "Payments View",
+                    "roles": [
+                        "View Payments"
+                    ]
+                },
+                {
+                    "name": "IF - Purchase Order Management",
+                    "roles": [
+                        "View POs",
+                        "Manage POs",
+                        "Approve POs"
+                    ]
+                },
+                {
+                    "name": "IF - Invoice Management",
+                    "roles": [
+                        "View Invoices",
+                        "Approve Invoices - Level 1",
+                        "Approve Invoices - Level 2",
+                        "Change Invoice Due Date",
+                        "Initiate Repayment for Vendor Finance",
+                        "Upload Invoices",
+                        "Request Finance"
+                    ]
+                },
+                {
+                    "name": "DF - Purchase Order Management",
+                    "roles": [
+                        "View POs",
+                        "Accept POs"
+                    ]
+                },
+                {
+                    "name": "DF - Invoice Management",
+                    "roles": [
+                        "View Invoices",
+                        "Manage Invoices",
+                        "Invoice Checker",
+                        "View DPD Invoices",
+                        "Request Finance for Distibutor"
+                    ]
+                },
+                {
+                    "name": "DF Miscellaneous",
+                    "roles": [
+                        "View OD Accounts",
+                        "View Funding Limits of a Dealer",
+                        "View Cash Slabs",
+                        "Manage Cash Slabs"
+                    ]
+                },
+                {
+                    "name": "Report",
+                    "roles": [
+                        "View PI Listing Report",
+                        "View Financing Usage",
+                        "View Limit Utilization Report",
+                        "View All Invoices Report"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Dealer",
+            "groups": [
+                {
+                    "name": "Configuration Management",
+                    "roles": [
+                        "Manage Configuration",
+                        "Manage Anchor Setting",
+                        "Manage Attachments"
+                    ]
+                },
+                {
+                    "name": "Maker",
+                    "roles": [
+                        "View POs",
+                        "Initiate OD Repayment",
+                        "Manage POs",
+                        "View Invoices",
+                        "Request Dealer Finance"
+                    ]
+                },
+                {
+                    "name": "Checker",
+                    "roles": [
+                        "OD Repayment",
+                        "POs Checker",
+                        "Dealer Finacnce Request"
+                    ]
+                },
+                {
+                    "name": "Miscellaneous",
+                    "roles": [
+                        "View OD Repayments",
+                        "View Discounting Requests",
+                        "View OD Accounts"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Vendor",
+            "groups": [
+                {
+                    "name": "Configuration Management",
+                    "roles": [
+                        "Manage Configurations",
+                        "Manage Anchor Settings",
+                        "Manage Attachments"
+                    ]
+                },
+                {
+                    "name": "Maker",
+                    "roles": [
+                        "Accept POs",
+                        "Flip PO to Invoice",
+                        "Manage Invoices",
+                        "Upload Invoices",
+                        "Edit Invoice",
+                        "Delete Invoice",
+                        "Delete Attachments from Invoices",
+                        "Replicate Invoice",
+                        "Request Vendor Finance"
+                    ]
+                },
+                {
+                    "name": "Checker",
+                    "roles": [
+                        "Invoice Checker",
+                        "Vendor Finance Request Checker"
+                    ]
+                },
+                {
+                    "name": "View Lists",
+                    "roles": [
+                        "View Purchase Orders",
+                        "View Invoices",
+                        "View PI(s)",
+                        "View Payments",
+                        "View Cash Planner",
+                        "View Vendor Finance Requests"
+                    ]
+                },
+                {
+                    "name": "Reports",
+                    "roles": [
+                        "View Funding Limit Utilization Report",
+                        "View Financing Report",
+                        "View IF - Payment Details Report",
+                        "View All Invoices Report"
+                    ]
+                }
+            ]
+        }
+    ]
+}
