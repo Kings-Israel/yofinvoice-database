@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::table('programs', function (Blueprint $table) {
             $table->bigInteger('stop_supply')->nullable();
             $table->boolean('buyer_invoice_approval_required')->default(false);
-            $table->string('collection_account')->nullable();
             $table->string('factoring_payment_account')->nullable();
         });
     }
@@ -27,7 +26,6 @@ return new class extends Migration
         Schema::table('programs', function (Blueprint $table) {
             $table->dropColumn('stop_supply');
             $table->dropColumn('buyer_invoice_approval_required');
-            $table->dropColumn('collection_account');
             $table->dropColumn('factoring_payment_account');
         });
     }
