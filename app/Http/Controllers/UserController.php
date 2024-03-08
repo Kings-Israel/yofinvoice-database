@@ -33,13 +33,13 @@ class UserController extends Controller
             $query->where('status', $selectedStatus);
         }
         if (!is_null($role)) {
-            $query->where('role', $role);
+            $query->where('role_id', $role);
         }
 
         $query->orderBy($sortBy, $orderBy);
         $rolesWithCounts = DB::table('users')
-            ->select('role', DB::raw('count(*) as count'))
-            ->groupBy('role')
+            ->select('role_id', DB::raw('count(*) as count'))
+            ->groupBy('role_id')
             ->get();
 
         $users = $query->paginate($itemsPerPage, ['*'], 'page', $page);

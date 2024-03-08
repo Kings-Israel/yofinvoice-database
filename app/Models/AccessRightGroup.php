@@ -21,4 +21,13 @@ class AccessRightGroup extends Model
     {
         return $this->hasMany(AccessRights::class);
     }
+    /**
+     * Get all of the RoleIds for the AccessRightGroup
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function RoleIds(): HasMany
+    {
+        return $this->hasMany(RoleId::class);
+    }
 }

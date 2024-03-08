@@ -8,6 +8,7 @@ use App\Http\Controllers\FetchBanksDocumentsController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MailingController;
 use App\Http\Controllers\OpportunityController;
+use App\Http\Controllers\PermissionDataController;
 use App\Http\Controllers\PipelineController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ReportController;
@@ -137,3 +138,7 @@ Route::post('/UI/bank/email/check', [BankController::class, 'checkEmail'])->name
 //Roles
 
 Route::get('/UI/roles/permissions', [RoleTypeController::class, 'index'])->name('UI.roles.permissions');
+Route::post('/UI/roles/permissions/data', [RoleTypeController::class, 'store'])->name('UI.roles.permissions.data');
+
+/// Roles
+Route::get('/UI/all/roles/data', [PermissionDataController::class, 'index'])->name('UI.all.permission.data');
