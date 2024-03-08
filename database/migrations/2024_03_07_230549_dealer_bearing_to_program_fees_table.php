@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('top_level_borrower_limit', 100)->nullable();
-            $table->string('limit_expiry_date')->nullable();
+        Schema::table('program_fees', function (Blueprint $table) {
+            $table->bigInteger('dealer_bearing')->nullable();
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('top_level_borrower_limit');
-            $table->dropColumn('limit_expiry_date');
+        Schema::table('program_fees', function (Blueprint $table) {
+            $table->dropColumn('dealer_bearing');
         });
     }
 };
