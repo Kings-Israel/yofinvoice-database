@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('industry')->nullable();
             $table->string('location')->nullable();
             $table->string('campaign')->nullable();
+            $table->string('pipeline_id')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->default('other');
             $table->enum('status', ['hot', 'warm', 'cold'])->default('hot');
             $table->enum('priority', ['high', 'medium', 'low'])->default('high');

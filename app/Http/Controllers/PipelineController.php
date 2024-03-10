@@ -6,6 +6,7 @@ use App\Helpers\ActivityHelper;
 use App\Helpers\FetchPipelineData;
 use App\Helpers\UpdatePipelineData;
 use App\Http\Resources\ActiveProjectsDashboardResource;
+use App\Http\Resources\AssociationContactResource;
 use App\Http\Resources\ClosedDealsReportResource;
 use App\Http\Resources\ColdLeadsUIPipelineResource;
 use App\Http\Resources\ContactUIPipelineResource;
@@ -66,6 +67,10 @@ class PipelineController extends Controller
         return response()->json([$data]);
 
     }
+    public function getAssociationContacts()
+    {
+        return response()->json(AssociationContactResource::collection(Pipeline::where('stage', 'Contact')->get()));
+    }
     public function contactDetails(Request $request)
     {
 
@@ -73,10 +78,13 @@ class PipelineController extends Controller
         $stage = $request->query('stage');
         $selectedStatus = $request->query('status');
         $itemsPerPage = $request->query('itemsPerPage', 15);
+        $leadType = $request->query('leadType', 'individual');
         $page = $request->query('page', 1);
         $sortBy = $request->query('sortBy', 'id');
         $orderBy = $request->query('orderBy', 'desc');
-        $query = Pipeline::where('stage', 'Contact');
+        $query = Pipeline::where('stage', 'Contact')
+            ->with('Contacts')
+            ->where('lead_type', $leadType);
         if (!is_null($searchQuery)) {
             // Assuming 'searchQuery' applies to a specific field or set of fields
             $query->search('%' . $searchQuery . '%');

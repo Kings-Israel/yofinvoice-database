@@ -74,6 +74,7 @@ Route::get('/get/UI/reports/widget/data', [PipelineController::class, 'getWidget
 Route::get('/get/UI/reports/pipeline/count', [PipelineController::class, 'getPipelineCount'])->name('get.UI.pipeline.getPipelineCount');
 Route::get('/get/UI/reports/conversion/analysis', [PipelineController::class, 'getCountPipelineWithinAPeriod'])->name('get.UI.pipeline.getCountPipelineWithinAPeriod');
 Route::get('/get/UI/pipelines/contacts', [PipelineController::class, 'contactDetails'])->name('get.UI.pipeline.contactDetails');
+Route::get('/get/UI/association/contacts', [PipelineController::class, 'getAssociationContacts'])->name('get.UI.pipeline.contactDetails');
 Route::get('/get/UI/products/reports', [PipelineController::class, 'productReport'])->name('get.UI.pipeline.productReports');
 Route::get('/get/UI/report/products/counts', [PipelineController::class, 'getProductCounts'])->name('get.UI.pipeline.getProductCounts');
 Route::get('/get/UI/closed/deals/reports', [PipelineController::class, 'getClosedDealsReports'])->name('get.UI.pipeline.getClosedDealsReports');
