@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->string('campaign')->nullable();
             $table->string('pipeline_id')->nullable();
+            $table->string('contact_send_email_id')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->default('other');
             $table->enum('status', ['hot', 'warm', 'cold'])->default('hot');
             $table->enum('priority', ['high', 'medium', 'low'])->default('high');

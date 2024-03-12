@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateBankRequest;
+use App\Http\Resources\BankDocumentResource;
 use App\Http\Resources\BankResource;
 use App\Models\Bank;
+use App\Models\BankDocument;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -93,35 +94,8 @@ class BankController extends Controller
 
         return response()->json(['exists' => $exists]);
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show(Bank $bank)
+    public function bankDocuments($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Bank $bank)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateBankRequest $request, Bank $bank)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Bank $bank)
-    {
-        //
+        return response()->json(BankDocumentResource::collection(BankDocument::with('bank')->where('bank_id', $id)->get()));
     }
 }
