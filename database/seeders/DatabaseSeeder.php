@@ -40,11 +40,21 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(BankSeeder::class);
         $this->call(BankUserSeeder::class);
+<<<<<<< HEAD
         // $this->call(ProgramSeeder::class);
         // $this->call(CompanySeeder::class);
         // $this->call(ProgramCompanyRoleSeeder::class);
         // $this->call(CompanyUserSeeder::class);
         // $this->call(PurchaseOrderSeeder::class);
         // $this->call(InvoiceSeeder::class);
+=======
+        $this->call(ProgramSeeder::class);
+        $this->call(CompanySeeder::class);
+        $this->call(ProgramCompanyRoleSeeder::class);
+        $this->call(CompanyUserSeeder::class);
+        $this->call(PurchaseOrderSeeder::class);
+        $this->call(InvoiceSeeder::class);
+        $this->call(RoleTypeSeeder::class);
+>>>>>>> origin/ish
     }
 }

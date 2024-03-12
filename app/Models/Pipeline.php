@@ -47,4 +47,13 @@ class Pipeline extends Model
     {
         return $this->hasMany(Activity::class, 'pipeline_id', 'id');
     }
+    /**
+     * Get all of the Contacts for the Pipeline
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function Contacts(): HasMany
+    {
+        return $this->hasMany(Pipeline::class, 'pipeline_id', 'id');
+    }
 }

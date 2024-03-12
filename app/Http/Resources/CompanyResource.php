@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CompanyResource extends JsonResource
@@ -15,20 +14,18 @@ class CompanyResource extends JsonResource
 
     public function toArray($request)
     {
-        $NPADate = Carbon::parse($this->due_date);
-
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'type' => $this->type,
-            'npa_status' => $this->npa_status,
-            'npa_date' => $NPADate->format('d M Y'),
-            'asset_classification_code' => $this->asset_classification_code,
-            'approval_status' => $this->approval_status,
+            'unique_identification_number' => $this->unique_identification_number,
+            'business_identification_number' => $this->business_identification_number,
             'status' => $this->status,
-            'bank' => $this->bank,
+            'customer_type' => $this->customer_type,
+            'relationship_manager_name' => $this->relationship_manager_name,
+            'business_segment' => $this->business_segment,
+            'organization_type' => $this->organization_type,
+            'bank' => $this->bank->name,
             'created_at' => $this->created_at->toIso8601String(),
-            'updated_at' => $this->updated_at->toIso8601String(),
         ];
     }
 

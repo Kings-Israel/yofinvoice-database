@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,17 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Company extends Model
 {
-    use HasFactory, HasRoles;
+    use HasFactory, HasRoles, Searchable;
+
+    protected $searchable = [
+        'name',
+        'unique_identification_number',
+        'branch_code',
+        'business_identification_number',
+        'organization_type',
+        'customer_type',
+        'bank.name',
+    ];
 
     /**
      * Get the bank that owns the Company

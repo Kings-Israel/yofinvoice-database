@@ -18,20 +18,24 @@ class MailingController extends Controller
     {
         $bankID = $request->input('bank');
         $pipelineID = $request->input('pipeline');
+        $associatedUserID = $request->input('associated_user');
         $pipeline = Pipeline::whereId($pipelineID)->first();
+        $associatedUser = Pipeline::where('id', $associatedUserID)->first();
         $documents = BankDocument::where('bank_id', $bankID)->pluck('name');
+        $email = $associatedUser->email ?? $pipeline->email;
 
         $uploadDocument = UploadDocument::create([
             'slug' => Str::uuid(),
-            'email' => $pipeline->email,
+            'email' => $email,
             'pipeline_id' => $pipelineID,
             'documents' => json_encode($documents),
         ]);
         $url = env('APP_FRONTEND_URL') . '/documents/' . $uploadDocument->slug;
 
-        Mail::to($pipeline->email)->send(new DocumentsUploadMail($pipeline->name, $url, $documents));
+        Mail::to($email)->send(new DocumentsUploadMail($pipeline->name, $url, $documents));
         $pipeline->update([
             'bank_id' => $bankID,
+            'contact_send_email_id' => $associatedUserID,
         ]);
         ActivityHelper::logActivity([
             'subject_type' => "Document",

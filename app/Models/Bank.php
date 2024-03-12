@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bank extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     /**
      * The attributes that aren't mass assignable.
@@ -17,6 +18,11 @@ class Bank extends Model
      * @var array
      */
     protected $guarded = [];
+
+    protected $searchable = [
+        'name',
+        'email',
+    ];
 
     /**
      * The users that belong to the Bank

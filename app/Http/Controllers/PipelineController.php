@@ -6,6 +6,7 @@ use App\Helpers\ActivityHelper;
 use App\Helpers\FetchPipelineData;
 use App\Helpers\UpdatePipelineData;
 use App\Http\Resources\ActiveProjectsDashboardResource;
+use App\Http\Resources\AssociationContactResource;
 use App\Http\Resources\ClosedDealsReportResource;
 use App\Http\Resources\ColdLeadsUIPipelineResource;
 use App\Http\Resources\ContactUIPipelineResource;
@@ -66,6 +67,23 @@ class PipelineController extends Controller
         return response()->json([$data]);
 
     }
+    public function getAssociationContacts()
+    {
+        return response()->json(AssociationContactResource::collection(Pipeline::whereNull('pipeline_id')->where('stage', 'Contact')->whereNot('lead_type', 'corporate')->get()));
+    }
+    public function getAssociatedContacts(Request $request)
+    {
+        $data = $request->all();
+        return response()->json(AssociationContactResource::collection(Pipeline::where('pipeline_id', $data['pipeline_id'])->get()));
+    }
+    public function postAssociationContacts(Request $request)
+    {
+        $data = $request->all();
+        Pipeline::whereId($data['contact_id'])->update([
+            'pipeline_id' => $data['pipeline_id'],
+        ]);
+        return response()->json(['message' => "contact associated successfully"]);
+    }
     public function contactDetails(Request $request)
     {
 
@@ -73,10 +91,13 @@ class PipelineController extends Controller
         $stage = $request->query('stage');
         $selectedStatus = $request->query('status');
         $itemsPerPage = $request->query('itemsPerPage', 15);
+        $leadType = $request->query('leadType', 'individual');
         $page = $request->query('page', 1);
         $sortBy = $request->query('sortBy', 'id');
         $orderBy = $request->query('orderBy', 'desc');
-        $query = Pipeline::where('stage', 'Contact');
+        $query = Pipeline::where('stage', 'Contact')
+            ->with('Contacts')
+            ->where('lead_type', $leadType);
         if (!is_null($searchQuery)) {
             // Assuming 'searchQuery' applies to a specific field or set of fields
             $query->search('%' . $searchQuery . '%');
@@ -249,16 +270,17 @@ class PipelineController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        $leadType = strtolower($data['lead_type']);
         $pipeline = Pipeline::create([
             'stage' => 'Contact',
             'name' => $data['name'],
             'whatsapp_number' => $data['whatsapp_number'],
             'company' => $data['company'] ?? $data['name'],
-            'department' => $data['department'],
+            'department' => $data['department'] ?? "No department",
             'phone_number' => $data['phone_number'],
             'product' => strtolower($data['product']),
             'email' => $data['email'],
-            'lead_type' => strtolower($data['lead_type']),
+            'lead_type' => $leadType,
             'point_of_contact' => $data['point_of_contact'] ?? $data['owner'],
             'tatDays' => $data['tatDays'],
             'gender' => $data['gender'],
@@ -269,13 +291,43 @@ class PipelineController extends Controller
             'industry' => $data['industry'],
             'location' => $data['location'],
             'priority' => $data['priority'],
-            'branch' => $data['branch'],
+            'branch' => $data['branch'] ?? "No Branch",
             'associated_user' => $data['associated_user'],
             'interaction_type' => $data['interaction_type'],
             'source' => $data['source'],
             'very_next_step' => $data['very_next_step'] ?? 'Call',
             'note' => $data['note'],
         ]);
+        if ($leadType === "corporate") {
+            $pipeline = Pipeline::create([
+                'stage' => 'Contact',
+                'name' => $data['firstName'] . " " . $data['lastName'],
+                'whatsapp_number' => $data['contact_phone_number'],
+                'company' => $data['company'] ?? $data['name'],
+                'department' => $data['department'] ?? "No department",
+                'phone_number' => $data['contact_phone_number'],
+                'product' => strtolower($data['product']),
+                'email' => $data['contactEmail'],
+                'lead_type' => 'individual',
+                'point_of_contact' => $data['point_of_contact'] ?? $data['owner'],
+                'tatDays' => $data['tatDays'],
+                'gender' => $data['gender'],
+                'status' => strtolower($data['status']),
+                'owner' => $data['owner'],
+                'campaign' => $data['campaign'] ?? 'Google',
+                'region' => $data['region'],
+                'industry' => $data['industry'],
+                'location' => $data['location'],
+                'priority' => $data['priority'],
+                'branch' => $data['branch'] ?? "No Branch",
+                'associated_user' => $data['associated_user'],
+                'interaction_type' => $data['interaction_type'],
+                'source' => $data['source'],
+                'very_next_step' => $data['very_next_step'] ?? 'Call',
+                'note' => $data['note'],
+                'pipeline_id' => $pipeline->id,
+            ]);
+        }
         if ($pipeline) {
             ActivityHelper::logActivity([
                 'subject_type' => "Storing an Pipeline",
@@ -288,10 +340,10 @@ class PipelineController extends Controller
             ]);
 
             // Log a success message or return a response
-            return response()->json(['message' => 'Opportunity created successfully'], 201);
+            return response()->json(['message' => 'Contact created successfully'], 201);
         } else {
             // Log an error message or return an error response
-            return response()->json(['message' => 'Error creating opportunity'], 500);
+            return response()->json(['message' => 'Error creating contact'], 500);
         }
 
     }
@@ -301,7 +353,6 @@ class PipelineController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        info($data);
         switch ($data['stage']) {
             case 'Lead':
                 UpdatePipelineData::updateLeadsDetails($data, $id);
@@ -349,21 +400,22 @@ class PipelineController extends Controller
                 'note' => $data['note'],
             ]);
         if ($pipeline) {
+            $value = Pipeline::whereId($id)->first();
             ActivityHelper::logActivity([
                 'subject_type' => "Updating a Pipeline",
                 "stage" => "Pipeline",
-                "section" => $pipeline->stage,
-                "pipeline_id" => $pipeline->id,
-                'user_id' => $pipeline->id,
+                "section" => $value->stage,
+                "pipeline_id" => $value->id,
+                'user_id' => $value->id,
                 'description' => "Updating a pipeline",
-                'properties' => $pipeline,
+                'properties' => $value,
             ]);
 
             // Log a success message or return a response
-            return response()->json(['message' => 'Opportunity created successfully'], 201);
+            return response()->json(['message' => 'Edit was successfully'], 201);
         } else {
             // Log an error message or return an error response
-            return response()->json(['message' => 'Error creating opportunity'], 500);
+            return response()->json(['message' => 'An error occurred'], 500);
         }
 
     }
@@ -685,5 +737,59 @@ class PipelineController extends Controller
         });
 
         return response()->json($widgetData);
+    }
+
+    public function addNewContact(Request $request)
+    {
+        $data = $request->all();
+
+        $associatedPipeline = Pipeline::whereId($data['pipeline_id'])->first();
+        if ($associatedPipeline) {
+            $pipeline = Pipeline::create([
+                'stage' => 'Contact',
+                'name' => $data['firstName'] . " " . $data['lastName'],
+                'whatsapp_number' => $data['phone_number'],
+                'company' => $associatedPipeline->name,
+                'department' => $associatedPipeline->department,
+                'phone_number' => $data['phone_number'],
+                'product' => $associatedPipeline->product,
+                'email' => $data['email'],
+                'lead_type' => 'individual',
+                'point_of_contact' => $associatedPipeline->point_of_contact,
+                'tatDays' => 0,
+                'gender' => $data['gender'],
+                'status' => 'hot',
+                'owner' => $associatedPipeline->owner,
+                'campaign' => $associatedPipeline->campaign,
+                'region' => $associatedPipeline->region,
+                'industry' => $associatedPipeline->industry,
+                'location' => $associatedPipeline->location,
+                'priority' => $associatedPipeline->priority,
+                'branch' => $associatedPipeline->branch,
+                'associated_user' => $associatedPipeline->associated_user,
+                'interaction_type' => $associatedPipeline->interaction_type,
+                'source' => $associatedPipeline->source,
+                'very_next_step' => $associatedPipeline->very_next_step,
+                'note' => $associatedPipeline->note,
+                'pipeline_id' => $associatedPipeline->id,
+            ]);
+            if ($pipeline) {
+                ActivityHelper::logActivity([
+                    'subject_type' => "Storing an Pipeline",
+                    "stage" => "Pipeline",
+                    "section" => $pipeline->stage,
+                    "pipeline_id" => $pipeline->id,
+                    'user_id' => $pipeline->id,
+                    'description' => "Storing an pipeline",
+                    'properties' => $pipeline,
+                ]);
+
+                // Log a success message or return a response
+                return response()->json(['message' => 'Contact created successfully'], 201);
+            }
+            // Log an error message or return an error response
+            return response()->json(['message' => 'Error creating contact'], 500);
+        }
+
     }
 }
