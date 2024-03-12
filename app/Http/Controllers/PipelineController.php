@@ -380,7 +380,6 @@ class PipelineController extends Controller
         $data = $request->all();
         $pipeline = Pipeline::whereId($id)
             ->update([
-                'stage' => 'Contact',
                 'name' => $data['name'],
                 'company' => $data['company'] ?? $data['name'],
                 'department' => $data['department'],
