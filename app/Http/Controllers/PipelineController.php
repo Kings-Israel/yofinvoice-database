@@ -362,7 +362,7 @@ class PipelineController extends Controller
         $data = $request->all();
         switch ($data['stage']) {
             case 'Lead':
-                UpdatePipelineData::updateLeadsDetails($data, $id);
+                UpdatePipelineData::updateLeadsDetails($request, $id);
                 break;
 
             case 'Opportunity':
@@ -374,6 +374,62 @@ class PipelineController extends Controller
 
                 // break;
         }
+    }
+    public function updateLead(Request $request, $id)
+    {
+        $lead = Pipeline::findOrFail($id); // Ensure the lead exists
+
+        $lead->update($request->all());
+        $pipeline = Pipeline::whereId($id)
+            ->update([
+                'stage' => 'Lead',
+            ]);
+        if ($pipeline) {
+            $pipelinData = Pipeline::whereId($id)->first();
+            ActivityHelper::logActivity([
+                'subject_type' => "Converting to a Lead",
+                "stage" => $pipelinData->stage,
+                "section" => $pipelinData->stage,
+                "pipeline_id" => $id,
+                'user_id' => $id,
+                'description' => "Converted the following to a lead",
+                'properties' => $pipelinData,
+            ]);
+
+            return response()->json(['message' => 'Opportunity created successfully'], 200);
+        } else {
+            // Log an error message or return an error response
+            return response()->json(['message' => 'Error creating opportunity'], 500);
+        }
+
+    }
+    public function updateOpportunity(Request $request, $id)
+    {
+        $lead = Pipeline::findOrFail($id); // Ensure the lead exists
+
+        $lead->update($request->all());
+        $pipeline = Pipeline::whereId($id)
+            ->update([
+                'stage' => 'Opportunity',
+            ]);
+        if ($pipeline) {
+            $pipelinData = Pipeline::whereId($id)->first();
+            ActivityHelper::logActivity([
+                'subject_type' => "Converting to a Lead",
+                "stage" => $pipelinData->stage,
+                "section" => $pipelinData->stage,
+                "pipeline_id" => $id,
+                'user_id' => $id,
+                'description' => "Converted the following to a lead",
+                'properties' => $pipelinData,
+            ]);
+
+            return response()->json(['message' => 'Opportunity created successfully'], 200);
+        } else {
+            // Log an error message or return an error response
+            return response()->json(['message' => 'Error creating opportunity'], 500);
+        }
+
     }
     public function updatePipeline(Request $request, $id)
     {

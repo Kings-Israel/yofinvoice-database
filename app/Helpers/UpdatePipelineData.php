@@ -9,13 +9,12 @@ class UpdatePipelineData
 
     public static function updateLeadsDetails($data, $id)
     {
+        $lead = Pipeline::findOrFail($id); // Ensure the lead exists
+
+        $lead->update($data);
         $pipeline = Pipeline::whereId($id)
             ->update([
                 'stage' => 'Lead',
-                'point_of_contact' => $data['pointOfContact'],
-                'region' => $data['region'],
-                'branch' => $data['branch'],
-                'status' => $data['status'],
             ]);
         if ($pipeline) {
             $pipelinData = Pipeline::whereId($id)->first();
@@ -29,7 +28,35 @@ class UpdatePipelineData
                 'properties' => $pipelinData,
             ]);
 
-            return response()->json(['message' => 'Opportunity created successfully'], 201);
+            return response()->json(['message' => 'Opportunity created successfully'], 200);
+        } else {
+            // Log an error message or return an error response
+            return response()->json(['message' => 'Error creating opportunity'], 500);
+        }
+
+    }
+    public static function updateLeadsOpportunity($data, $id)
+    {
+        $lead = Pipeline::findOrFail($id);
+
+        $lead->update($data);
+        $pipeline = Pipeline::whereId($id)
+            ->update([
+                'stage' => 'Opportunity',
+            ]);
+        if ($pipeline) {
+            $pipelinData = Pipeline::whereId($id)->first();
+            ActivityHelper::logActivity([
+                'subject_type' => "Converting to a Lead",
+                "stage" => $pipelinData->stage,
+                "section" => $pipelinData->stage,
+                "pipeline_id" => $id,
+                'user_id' => $id,
+                'description' => "Converted the following to a lead",
+                'properties' => $pipelinData,
+            ]);
+
+            return response()->json(['message' => 'Opportunity created successfully'], 200);
         } else {
             // Log an error message or return an error response
             return response()->json(['message' => 'Error creating opportunity'], 500);

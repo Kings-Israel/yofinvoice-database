@@ -66,6 +66,8 @@ Route::get('/details/UI/bank/documents', [FetchBanksDocumentsController::class, 
 Route::post('/store/UI/pipeline/data', [PipelineController::class, 'store'])->name('store.UI.pipeline.data');
 Route::post('/update/UI/pipeline/data/{id}', [PipelineController::class, 'updatePipeline'])->name('update.UI.pipeline.data.id');
 Route::post('/store/UI/pipeline/lead/data/{id}', [PipelineController::class, 'update'])->name('store.UI.pipeline.lead.data');
+Route::post('/update/UI/pipeline/lead/data/{id}', [PipelineController::class, 'updateLead'])->name('store.UI.pipeline.updateLead.data');
+Route::post('/update/UI/pipeline/opportunity/data/{id}', [PipelineController::class, 'updateOpportunity'])->name('store.UI.pipeline.updateOpportunity.data');
 Route::post('/store/UI/pipeline/opportunity/data/{id}', [PipelineController::class, 'update'])->name('store.UI.pipeline.opportunity.data');
 Route::get('/get/UI/pipeline/data', [PipelineController::class, 'index'])->name('get.UI.pipeline.data');
 Route::post('/post/UI/new/contact', [PipelineController::class, 'addNewContact'])->name('get.UI.pipeline.addNewContact');
