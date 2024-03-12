@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->string('top_level_borrower_limit', 100)->nullable();
-            $table->string('limit_expiry_date')->nullable();
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->foreignId('buyer_id')->nullable()->references('id')->on('companies')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('top_level_borrower_limit');
-            $table->dropColumn('limit_expiry_date');
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->dropColumn('buyer_id');
         });
     }
 };

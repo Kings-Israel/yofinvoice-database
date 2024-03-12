@@ -17,14 +17,14 @@ class BankSeeder extends Seeder
     {
         Bank::factory()
             ->has(BankDocument::factory(3), 'requiredDocuments')
-            ->has(BankPaymentAccount::factory())
+            // ->has(BankPaymentAccount::factory())
             ->create();
 
         sleep(1);
 
         Bank::factory()
             ->has(BankDocument::factory(2), 'requiredDocuments')
-            ->has(BankPaymentAccount::factory())
+            // ->has(BankPaymentAccount::factory())
             ->create([
                 'url' => '456789'
             ]);
