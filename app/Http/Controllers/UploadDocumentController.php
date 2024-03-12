@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityHelper;
 use App\Http\Resources\ComplianceDocumentResource;
 use App\Mail\DocumentUploadedSuccessfullyMail;
 use App\Mail\NotificationBankUploadedDocuments;
@@ -53,8 +54,18 @@ class UploadDocumentController extends Controller
                 ]);
             }
         }
-        Mail::to($uploadedDocuments->email)->send(new DocumentUploadedSuccessfullyMail($uploadedDocuments->documents));
-        Mail::to($bank->email)->send(new NotificationBankUploadedDocuments($pipeline->name, $uploadedDocuments->documents));
+        ActivityHelper::logActivity([
+            'subject_type' => "Document Upload",
+            "stage" => "Uploading Documents",
+            "section" => "Document",
+            "pipeline_id" => $pipeline->id,
+            'user_id' => $pipeline->id,
+            'description' => "Uploading documents for" . $uuid,
+            'properties' => $uploadedDocuments,
+        ]);
+
+        Mail::to($uploadedDocuments->email)->send(new DocumentUploadedSuccessfullyMail(json_decode($uploadedDocuments->documents)));
+        Mail::to($bank->email)->send(new NotificationBankUploadedDocuments($pipeline->name, json_decode($uploadedDocuments->documents)));
         return response()->json([
             'message' => 'Files uploaded successfully',
         ], 200);

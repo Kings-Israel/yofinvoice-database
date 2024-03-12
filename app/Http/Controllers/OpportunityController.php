@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityHelper;
 use App\Http\Resources\ClosedDealResource;
 use App\Http\Resources\ColdDealResource;
 use App\Http\Resources\OpportunityListResource;
@@ -348,10 +349,17 @@ class OpportunityController extends Controller
             'residentialAddress' => $data['residentialAddress'],
         ]);
 
-        // Optionally, you can validate the data manually
-        // and handle validation errors here if required.
-
         if ($opportunity) {
+            ActivityHelper::logActivity([
+                'subject_type' => "Storing an Opportunity",
+                "stage" => "Pipeline",
+                "section" => "Contact",
+                "pipeline_id" => $opportunity->id,
+                'user_id' => $opportunity->id,
+                'description' => "Storing an opportunity",
+                'properties' => $opportunity,
+            ]);
+
             // Log a success message or return a response
             return response()->json(['message' => 'Opportunity created successfully'], 201);
         } else {

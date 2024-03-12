@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdatescheduleRequest;
+use App\Helpers\ActivityHelper;
 use App\Http\Resources\RecentActivityTimelineDashboardResource;
 use App\Http\Resources\Schedule\AllFollowUpsResource;
 use App\Http\Resources\Schedule\GuestListUIResource;
@@ -10,6 +10,7 @@ use App\Models\Pipeline;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends Controller
 {
@@ -18,7 +19,6 @@ class ScheduleController extends Controller
      */
     public function index(Request $request)
     {
-        //test
         $searchQuery = $request->query('q', '');
         $query = Schedule::query();
 
@@ -37,13 +37,6 @@ class ScheduleController extends Controller
             'data' => GuestListUIResource::collection(Pipeline::all()),
         ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -51,8 +44,15 @@ class ScheduleController extends Controller
     public function store(Request $request)
     {
         $props = $request->input('extendedProps');
+        $title = $request->input('title');
+        $pipeline = [];
+        if (is_numeric($title)) {
+            $pipeline = Pipeline::whereId($title)->first();
+        }
+        info($request->all());
         $event = Schedule::create([
-            'title' => $request->input('title'),
+            'title' => !is_numeric($title) ? $title : "Meeting with " . $pipeline->name,
+            'pipeline_id' => is_numeric($title) ? $title : 0,
             'start' => $request->input('start'),
             'end' => $request->input('end'),
             'allDay' => $request->input('allDay'),
@@ -60,40 +60,23 @@ class ScheduleController extends Controller
             'calendar' => $props['calendar'],
             'extendedProps' => $props,
         ]);
-        return response()->json($event, 201);
+        if ($event) {
+            ActivityHelper::logActivity([
+                'subject_type' => "Creating an event",
+                "stage" => "Schedule",
+                "section" => "Event",
+                "pipeline_id" => $event->id,
+                'user_id' => $event->id,
+                'description' => "Creating a new event",
+                'properties' => $event,
+            ]);
 
-    }
+            return response()->json($event, 201);
+        }
+        return response()->json([
+            "message" => "An error occurred",
+        ], 500);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(schedule $schedule)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(schedule $schedule)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatescheduleRequest $request, schedule $schedule)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(schedule $schedule)
-    {
-        //
     }
     public function getRecentActivityDashboard()
     {
@@ -125,5 +108,26 @@ class ScheduleController extends Controller
         return response()->json([
             'count' => Schedule::count(),
         ]);
+    }
+
+    public function getWeeklyCollectionMeeting()
+    {
+        $weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        $hoursPerWeekday = Schedule::query()
+            ->select([
+                DB::raw('DAYNAME(start) as weekday'),
+                DB::raw('LEAST(SUM(TIMESTAMPDIFF(HOUR, start, end)), 7) as total_hours'),
+            ])
+            ->whereRaw('DAYOFWEEK(start) BETWEEN 2 AND 6')
+            ->groupBy(DB::raw('DAYNAME(start)'))
+            ->get()
+            ->pluck('total_hours', 'weekday');
+        $weekdaysWithHours = collect($weekdays)->mapWithKeys(function ($weekday) use ($hoursPerWeekday) {
+            return [$weekday => (int) $hoursPerWeekday->get($weekday, 0)];
+        });
+
+        return response()->json($weekdaysWithHours);
+
     }
 }
