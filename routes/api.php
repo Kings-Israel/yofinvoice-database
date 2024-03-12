@@ -102,6 +102,11 @@ Route::get('/get/specific/pipeline/{id}', function ($id) {
     return response()->json(Pipeline::whereId($id)->get());
 
 })->name('get.lead.names');
+
+Route::get('/get/UI/specific/pipeline/{id}', function ($id) {
+    return response()->json(Pipeline::whereId($id)->first());
+
+})->name('get.lead.names');
 Route::post('/mark/UI/pipeline/hot/{id}', function ($id) {
     return Pipeline::whereId($id)->update(['status' => 'hot']);
 });

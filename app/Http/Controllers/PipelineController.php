@@ -42,7 +42,14 @@ class PipelineController extends Controller
     public function checkEmail(Request $request)
     {
         $email = $request->input('email');
-        $exists = Pipeline::where('email', $email)->exists();
+        $pipeline_id = $request->input('pipeline_id');
+        $exists = true;
+        if ($pipeline_id) {
+            $exists = Pipeline::whereNot('id', $pipeline_id)->where('email', $email)->exists();
+        } else {
+
+            $exists = Pipeline::where('email', $email)->exists();
+        }
 
         return response()->json(['exists' => $exists]);
     }
