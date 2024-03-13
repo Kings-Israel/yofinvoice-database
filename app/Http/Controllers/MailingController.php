@@ -23,6 +23,15 @@ class MailingController extends Controller
         $associatedUser = Pipeline::where('id', $associatedUserID)->first();
         $documents = BankDocument::where('bank_id', $bankID)->pluck('name');
         $email = $associatedUser->email ?? $pipeline->email;
+        $checkSlug = UploadDocument::where('email', $email)->orderBy('id', 'desc')->first();
+
+        if ($checkSlug) {
+            return response()->json([
+                "url" => env('APP_FRONTEND_URL') . '/documents/' . $checkSlug->slug,
+                'message' => "Uploaded",
+            ]);
+
+        }
 
         $uploadDocument = UploadDocument::create([
             'slug' => Str::uuid(),

@@ -81,6 +81,7 @@ class PipelineController extends Controller
     public function getAssociatedContacts(Request $request)
     {
         $data = $request->all();
+        info($data);
         return response()->json(AssociationContactResource::collection(Pipeline::where('pipeline_id', $data['pipeline_id'])->get()));
     }
     public function postAssociationContacts(Request $request)
