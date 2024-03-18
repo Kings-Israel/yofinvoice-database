@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('program_discounts', function (Blueprint $table) {
+        Schema::table('program_vendor_discounts', function (Blueprint $table) {
             $table->bigInteger('from_day')->nullable();
             $table->bigInteger('to_day')->nullable();
             $table->string('limit_block_overdue_days')->nullable();
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('program_discounts', function (Blueprint $table) {
+        Schema::table('program_vendor_discounts', function (Blueprint $table) {
             $table->dropColumn('from_day');
             $table->dropColumn('to_day');
             $table->dropColumn('limit_block_overdue_days');
