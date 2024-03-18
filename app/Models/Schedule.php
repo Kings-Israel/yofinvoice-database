@@ -14,16 +14,7 @@ class Schedule extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'pipeline_id',
-        'title',
-        'start',
-        'end',
-        'allDay',
-        'url',
-        'extendedProps',
-        'calendar',
-    ];
+    protected $guarded = [''];
     protected $searchable = [
         'pipeline_id',
         'title',

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BankResource extends JsonResource
+class InteractionUIResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,11 @@ class BankResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'name' => $this->name,
-            'url' => $this->url,
-            'email' => $this->email,
-            'contact_person' => $this->Admin->name ?? 'name',
-            'created_at' => $this->created_at->format('d/M/Y'),
+            'id' => $this->id,
+            'stage' => "Stage: " . $this->stage,
+            'touchPoint' => $this->touchPoint,
+            'description' => $this->remarks,
+            'date' => $this->created_at->format('d M Y'),
         ];
     }
 }

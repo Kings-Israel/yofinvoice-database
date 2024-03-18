@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ExpenseManagementController;
 use App\Http\Controllers\FetchBanksDocumentsController;
+use App\Http\Controllers\FollowUpNoteController;
+use App\Http\Controllers\InteractionController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MailingController;
 use App\Http\Controllers\OpportunityController;
@@ -159,3 +162,16 @@ Route::post('/UI/roles/permissions/data', [RoleTypeController::class, 'store'])-
 
 /// Roles
 Route::get('/UI/all/roles/data', [PermissionDataController::class, 'index'])->name('UI.all.permission.data');
+
+///Interaction
+
+Route::post('/post/store/interaction', [InteractionController::class, 'store'])->name('interaction.store.contacts');
+Route::get('/get/stored/interaction', [InteractionController::class, 'index'])->name('interaction.index.contacts');
+
+//Follow Ups
+Route::post('/post/followup/meeting', [FollowUpNoteController::class, 'store'])->name('followup.store.notes');
+Route::get('/get/UI/followup/meeting', [FollowUpNoteController::class, 'index'])->name('followup.index.notes');
+Route::get('/import-cities', [CityController::class, 'importCities'])->name('import.cities');
+Route::get('/get/countries', [CityController::class, 'getCountries'])->name('get.country');
+Route::get('/get/counties/{country}', [CityController::class, 'getCounties'])->name('get.getCounties');
+Route::get('/get/country/city', [CityController::class, 'getCountryCities'])->name('get.getCounties.getCountryCities');

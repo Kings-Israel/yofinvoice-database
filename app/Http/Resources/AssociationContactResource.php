@@ -19,6 +19,7 @@ class AssociationContactResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'avatar' => asset('images/avatars/yofinvoice.png'),
+            'default' => $this->email,
         ];
     }
 }

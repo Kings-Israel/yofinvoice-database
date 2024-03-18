@@ -63,20 +63,21 @@ class BankController extends Controller
     {
         info($request->all());
         $name = $request->input('name');
-        $url = $request->input('url');
-        $email = $request->input('email');
+        $email = $request->input('bankEmail');
         $created_by = $request->input('createdBy');
+        $user = User::create([
+            'name' => $request->input('contactPersonName'),
+            'email' => $request->input('contactEmail'),
+            'phone_number' => $request->input('phoneNumber'),
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
 
         $bank = Bank::create([
             'name' => $name,
             'email' => $email,
-            'url' => Str::replace(' ', '', $url),
-        ]);
-        $user = User::create([
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
+            'url' => Str::replace(' ', '', $name),
+            'contact_person_id' => $user->id,
         ]);
 
         if ($user && $bank) {

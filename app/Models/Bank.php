@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Bank extends Model
 {
@@ -17,7 +18,7 @@ class Bank extends Model
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $guarded = [''];
 
     protected $searchable = [
         'name',
@@ -54,5 +55,14 @@ class Bank extends Model
     public function paymentAccounts(): HasMany
     {
         return $this->hasMany(BankPaymentAccount::class);
+    }
+    /**
+     * Get the admin associated with the Bank
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function Admin(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'contact_person_id', );
     }
 }

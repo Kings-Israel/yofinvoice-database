@@ -17,6 +17,7 @@ class LeadUIPipelineResource extends JsonResource
         return [
             'id' => $this->id,
             'company' => $this->company,
+            'stage' => $this->stage,
             'name' => $this->name,
             'created_at' => $this->created_at->format('d-M-Y'),
             'email' => $this->email,

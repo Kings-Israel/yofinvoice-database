@@ -81,9 +81,20 @@ class PipelineController extends Controller
     public function getAssociatedContacts(Request $request)
     {
         $data = $request->all();
-        info($data);
-        return response()->json(AssociationContactResource::collection(Pipeline::where('pipeline_id', $data['pipeline_id'])->get()));
+        if (isset($data['pipeline_id'])) {
+            $pipelines = Pipeline::where('pipeline_id', $data['pipeline_id'])->get();
+
+            if ($pipelines->isEmpty()) {
+                $pipeline = Pipeline::whereId($data['pipeline_id'])->get();
+                return response()->json(AssociationContactResource::collection($pipeline));
+            } else {
+                return response()->json(AssociationContactResource::collection($pipelines));
+            }
+        }
+
+        return response()->json([]);
     }
+
     public function postAssociationContacts(Request $request)
     {
         $data = $request->all();
@@ -296,6 +307,7 @@ class PipelineController extends Controller
             'owner' => $data['owner'],
             'campaign' => $data['campaign'] ?? 'Google',
             'region' => $data['region'],
+            'country' => $data['country'],
             'industry' => $data['industry'],
             'location' => $data['location'],
             'priority' => $data['priority'],
@@ -320,10 +332,12 @@ class PipelineController extends Controller
                 'point_of_contact' => $data['point_of_contact'] ?? $data['owner'],
                 'tatDays' => $data['tatDays'],
                 'gender' => $data['gender'],
+                'contact_role' => $data['contactRole'],
                 'status' => strtolower($data['status']),
                 'owner' => $data['owner'],
                 'campaign' => $data['campaign'] ?? 'Google',
                 'region' => $data['region'],
+                'country' => $data['country'],
                 'industry' => $data['industry'],
                 'location' => $data['location'],
                 'priority' => $data['priority'],

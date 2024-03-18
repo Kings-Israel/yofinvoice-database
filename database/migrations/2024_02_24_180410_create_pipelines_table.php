@@ -17,15 +17,17 @@ return new class extends Migration
             $table->string('name');
             $table->string('company');
             $table->integer('tatDays')->default(0);
-            $table->string('department');
+            $table->string('department')->nullable();
             $table->enum('lead_type', ['individual', 'corporate'])->default('individual');
             $table->enum('product', ['vendor financing', 'dealer financing'])->default('vendor financing');
             $table->string('email')->unique();
             $table->string('phone_number');
             $table->string('point_of_contact')->nullable();
+            $table->string('contact_role')->nullable();
             $table->string('whatsapp_number')->nullable();
             $table->string('bank_id')->default('1');
             $table->string('region')->nullable();
+            $table->string('country')->nullable();
             $table->string('industry')->nullable();
             $table->string('location')->nullable();
             $table->string('campaign')->nullable();

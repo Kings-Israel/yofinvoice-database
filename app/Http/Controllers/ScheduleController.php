@@ -20,11 +20,21 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         $searchQuery = $request->query('q', '');
+        $searchStatus = $request->query('status', '');
+        $calendar = $request->query('calendar', '');
         $query = Schedule::query();
 
         if (!is_null($searchQuery)) {
             // Assuming 'searchQuery' applies to a specific field or set of fields
             $query->search('%' . $searchQuery . '%');
+        }
+        if (!is_null($searchStatus)) {
+            // Assuming 'searchQuery' applies to a specific field or set of fields
+            $query->where('status', 'LIKE', '%' . $searchStatus . '%');
+        }
+        if (!is_null($calendar)) {
+            // Assuming 'searchQuery' applies to a specific field or set of fields
+            $query->where('calendar', 'LIKE', '%' . $calendar . '%');
         }
         return response()->json([
             'data' => AllFollowUpsResource::collection($query->get()),

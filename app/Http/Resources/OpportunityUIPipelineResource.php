@@ -17,6 +17,7 @@ class OpportunityUIPipelineResource extends JsonResource
         return [
             'id' => $this->id,
             'company' => $this->company,
+            'stage' => $this->stage,
             'name' => $this->name,
             'converted_on' => $this->created_at->format('d-M-Y'),
             'email' => $this->email,

@@ -22,6 +22,7 @@ class AllFollowUpsResource extends JsonResource
             'end' => $this->end,
             'allDay' => $this->allDay,
             'url' => $this->url,
+            'done' => $this->status,
             'expired' => Carbon::parse($this->end)->isPast() ? 'expired' : 'active',
             'extendedProps' => [
                 'guests' => $this->extendedProps['guests'] ?? [],
