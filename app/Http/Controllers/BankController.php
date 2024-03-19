@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AssociationContactResource;
 use App\Http\Resources\BankDocumentResource;
 use App\Http\Resources\BankResource;
 use App\Models\Bank;
 use App\Models\BankDocument;
+use App\Models\PermissionData;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -98,5 +100,14 @@ class BankController extends Controller
     public function bankDocuments($id)
     {
         return response()->json(BankDocumentResource::collection(BankDocument::with('bank')->where('bank_id', $id)->get()));
+    }
+
+    public function associatedBankUser()
+    {
+        $roleId = PermissionData::where('RoleTypeName', 'Bank')->pluck('id');
+        $users = User::whereIn('id', $roleId)->get();
+
+        return response()->json(AssociationContactResource::collection($users));
+
     }
 }

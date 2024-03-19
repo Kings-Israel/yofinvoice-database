@@ -2,68 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePermissionDataRequest;
-use App\Http\Requests\UpdatePermissionDataRequest;
 use App\Http\Resources\PermissionListResource;
 use App\Models\PermissionData;
+use Illuminate\Http\Request;
 
 class PermissionDataController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json([
-            'permissions' => PermissionListResource::collection(PermissionData::withCount('roleIDs')->get()),
-        ]);
-    }
+        $itemsPerPage = $request->query('itemsPerPage', 15);
+        $page = $request->query('page', 1);
+        $data = PermissionData::withCount('roleIDs')->paginate($itemsPerPage, ['*'], 'page', $page);
+        $response = [
+            'permissions' => PermissionListResource::collection($data),
+            'totalPermissions' => $data->total(),
+            'currentPage' => $data->currentPage(),
+            'lastPage' => $data->lastPage(),
+        ];
+        return response()->json($response);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePermissionDataRequest $request)
+    public function userRoles(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(PermissionData $permissionData)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PermissionData $permissionData)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePermissionDataRequest $request, PermissionData $permissionData)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PermissionData $permissionData)
-    {
-        //
+        $module = $request->query('module', '');
+        if ($module === 'CRM' || $module === 'Bank') {
+            return response(PermissionData::where('RoleTypeName', $module)->pluck('RoleName'));
+        } else {
+            return response([]);
+        }
     }
 }

@@ -11,6 +11,7 @@ class RoleType extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+    // protected $dateFormat = 'Y-m-d H:i:s';
 
     /**
      * Get all of the Groups for the RoleType

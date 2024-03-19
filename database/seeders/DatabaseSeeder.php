@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\CompanyTest;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(2)->create();
+        CompanyTest::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Ish',
@@ -49,4 +51,3 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleTypeSeeder::class);
     }
 }
-

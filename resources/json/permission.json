@@ -336,6 +336,72 @@
                     ]
                 }
             ]
+        },
+        {
+            "type": "CRM",
+            "groups": [
+                {
+                    "name": "Pipeline Contacts",
+                    "roles": [
+                        "Add Contact",
+                        "View Contact",
+                        "Edit Contact",
+                        "Add Interaction",
+                        "Schedule View",
+                        "Convert to Lead",
+                        "View Contact"
+                    ]
+                },
+                {
+                    "name": "Pipeline Lead",
+                    "roles": [
+                        "Add Lead",
+                        "View Lead",
+                        "Edit Lead",
+                        "Add Interaction",
+                        "Schedule View",
+                        "Convert to Opportunity",
+                        "View Lead"
+                    ]
+                },
+                {
+                    "name": "Pipeline Opportunity",
+                    "roles": [
+                        "View Opportunity",
+                        "Add Interaction",
+                        "Edit Opportunity",
+                        "Convert to Opportunity",
+                        "View Opportunity",
+                        "Share KYC"
+                    ]
+                },
+                {
+                    "name": "Pipeline Closed",
+                    "roles": [
+                        "View Closed"
+                    ]
+                },
+                {
+                    "name": "Schedules",
+                    "roles": [
+                        "View Schedules",
+                        "Add Schedules"
+                    ]
+                },
+                {
+                    "name": "Follow Ups",
+                    "roles": [
+                        "View Follow Ups",
+                        "Add Notes"
+                    ]
+                },
+                {
+                    "name": "Reports",
+                    "roles": [
+                        "View Reports"
+                    ]
+                }
+            ]
         }
     ]
 }

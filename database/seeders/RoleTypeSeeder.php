@@ -16,9 +16,6 @@ class RoleTypeSeeder extends Seeder
 
         $json = file_get_contents(base_path('resources/json/permission.json'));
         $permissions = json_decode($json);
-
-        // info(json_encode($permissions->permissions));
-
         DB::table('role_types')->truncate();
         DB::table('target_roles')->truncate();
         DB::table('access_right_groups')->truncate();
@@ -32,7 +29,6 @@ class RoleTypeSeeder extends Seeder
                 ]);
 
                 foreach ($group->roles as $roleName) {
-                    info($roleName);
                     $roleGroup->AccessGroups()->create(['name' => $roleName]);
                 }
             }

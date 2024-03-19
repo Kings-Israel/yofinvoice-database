@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ActivityHelper;
+use App\Http\Resources\AssociationContactResource;
+use App\Models\PermissionData;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -60,11 +62,14 @@ class AuthController extends Controller
     {
         $data = $request->all();
         $password = $data['password'] ?? 'password';
+        $role = PermissionData::where('RoleTypeName', $data['role'])->first();
         $user = User::create([
-            'name' => $data['name'],
+            'name' => $data['firstName'] . $data['lastName'],
             'email' => $data['email'],
             'password' => Hash::make($password),
             'email_verified_at' => now(),
+            'phone_number' => $data['contactNumber'],
+            'role_id' => $role->id ?? 0,
         ]);
         if ($user) {
             // Log a success message or return a response
@@ -73,6 +78,14 @@ class AuthController extends Controller
             // Log an error message or return an error response
             return response()->json(['message' => 'Error creating a user'], 500);
         }
+
+    }
+    public function getAssociatedUser()
+    {
+        $roleId = PermissionData::where('RoleTypeName', 'Bank')->pluck('id');
+        $users = User::whereIn('id', $roleId)->get();
+
+        return response()->json(AssociationContactResource::collection($users));
 
     }
 

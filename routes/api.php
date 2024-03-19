@@ -22,6 +22,8 @@ use App\Http\Controllers\SourceAnalysisController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UploadDocumentController;
 use App\Http\Controllers\UserController;
+use App\Models\Bank;
+use App\Models\Company;
 use App\Models\Pipeline;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
@@ -65,6 +67,9 @@ Route::get('/reports/customer/feedback', [ReportController::class, 'CustomerFeed
 Route::get('/company/detail/{id}', [CompanyController::class, 'show'])->name('UI.company.details');
 Route::get('/bank/documents/detail', [FetchBanksDocumentsController::class, 'getDocuments'])->name('bank.documents.details');
 Route::get('/details/UI/bank/documents', [FetchBanksDocumentsController::class, 'getBankDocuments'])->name('details.bank.documents');
+Route::get('/company/names', function () {
+    return response()->json(Company::pluck('name'));
+})->name('companies.name');
 
 Route::post('/store/UI/pipeline/data', [PipelineController::class, 'store'])->name('store.UI.pipeline.data');
 Route::post('/update/UI/pipeline/data/{id}', [PipelineController::class, 'updatePipeline'])->name('update.UI.pipeline.data.id');
@@ -154,14 +159,13 @@ Route::get('/UI/get/banks', [BankController::class, 'index'])->name('UI.get.bank
 Route::get('/UI/get/bank/documents/{id}', [BankController::class, 'bankDocuments'])->name('UI.get.bank.documents');
 Route::post('/UI/new/bank', [BankController::class, 'store'])->name('UI.new.bank');
 Route::post('/UI/bank/email/check', [BankController::class, 'checkEmail'])->name('UI.bank.email.check');
-
+Route::get('/associated/users/bank', [BankController::class, 'associatedBankUser'])->name('bank.user.associatedUSer');
 //Roles
 
 Route::get('/UI/roles/permissions', [RoleTypeController::class, 'index'])->name('UI.roles.permissions');
 Route::post('/UI/roles/permissions/data', [RoleTypeController::class, 'store'])->name('UI.roles.permissions.data');
-
-/// Roles
 Route::get('/UI/all/roles/data', [PermissionDataController::class, 'index'])->name('UI.all.permission.data');
+Route::get('/get/UI/user/roles', [RoleTypeController::class, 'userRoles'])->name('users.roles');
 
 ///Interaction
 
@@ -175,3 +179,8 @@ Route::get('/import-cities', [CityController::class, 'importCities'])->name('imp
 Route::get('/get/countries', [CityController::class, 'getCountries'])->name('get.country');
 Route::get('/get/counties/{country}', [CityController::class, 'getCounties'])->name('get.getCounties');
 Route::get('/get/country/city', [CityController::class, 'getCountryCities'])->name('get.getCounties.getCountryCities');
+
+//Banks
+Route::get('/get/banks/names', function () {
+    return response()->json(Bank::pluck('name'));
+})->name('get.banks.name');
