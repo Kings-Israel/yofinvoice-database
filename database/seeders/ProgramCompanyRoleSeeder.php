@@ -43,33 +43,33 @@ class ProgramCompanyRoleSeeder extends Seeder
         ]);
 
         // Vendor Configuration
-    ProgramVendorConfiguration::factory()->create([
-        'company_id' => $vendor->id,
-        'program_id' => $program->id,
-      ]);
+        ProgramVendorConfiguration::factory()->create([
+            'company_id' => $vendor->id,
+            'program_id' => $program->id,
+        ]);
 
-      // Vendor Discount Configurations
-      ProgramVendorDiscount::factory()->create([
-        'company_id' => $vendor->id,
-        'program_id' => $program->id,
-      ]);
+        // Vendor Discount Configurations
+        ProgramVendorDiscount::factory()->create([
+            'company_id' => $vendor->id,
+            'program_id' => $program->id,
+        ]);
 
-      // Vendor Fees
-      ProgramVendorFee::factory()->create([
-        'company_id' => $vendor->id,
-        'program_id' => $program->id,
-      ]);
+        // Vendor Fees
+        ProgramVendorFee::factory()->create([
+            'company_id' => $vendor->id,
+            'program_id' => $program->id,
+        ]);
 
-      // Vendor Bank Details
-      ProgramVendorBankDetail::factory()->create([
-        'company_id' => $vendor->id,
-        'program_id' => $program->id,
-      ]);
+        // Vendor Bank Details
+        ProgramVendorBankDetail::factory()->create([
+            'company_id' => $vendor->id,
+            'program_id' => $program->id,
+        ]);
 
-      // Vendor Contact Details
-      ProgramVendorContactDetail::factory()->create([
-        'company_id' => $vendor->id,
-        'program_id' => $program->id,
-      ]);
+        // Vendor Contact Details
+        ProgramVendorContactDetail::factory()->create([
+            'company_id' => $vendor->id,
+            'program_id' => $program->id,
+        ]);
     }
 }
