@@ -13,7 +13,7 @@
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
         "oddvalue/laravel-drafts": "^1.5",
-        "spatie/laravel-permission": "^6.3"
+        "spatie/laravel-permission": "^6.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

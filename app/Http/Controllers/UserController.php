@@ -22,7 +22,7 @@ class UserController extends Controller
         $role = $request->query('role');
         $sortBy = $request->query('sortBy', 'id');
         $searchQuery = $request->query('q');
-        $orderBy = $request->query('orderBy', 'asc');
+        $orderBy = $request->query('orderBy', 'desc');
         $query = User::query();
 
         if (!is_null($searchQuery)) {

@@ -30,7 +30,7 @@ class Bank extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'bank_users', 'user_id', 'bank_id');
+        return $this->belongsToMany(User::class, 'bank_users');
     }
 
     /**

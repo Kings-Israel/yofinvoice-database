@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\CompanyTest;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(2)->create();
-        CompanyTest::factory(10)->create();
+        // CompanyTest::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Ish',
@@ -42,12 +41,12 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(BankSeeder::class);
         $this->call(BankUserSeeder::class);
-        // $this->call(ProgramSeeder::class);
-        // $this->call(CompanySeeder::class);
-        // $this->call(ProgramCompanyRoleSeeder::class);
-        // $this->call(CompanyUserSeeder::class);
-        // $this->call(PurchaseOrderSeeder::class);
-        // $this->call(InvoiceSeeder::class);
+        $this->call(ProgramSeeder::class);
+        $this->call(CompanySeeder::class);
+        $this->call(ProgramCompanyRoleSeeder::class);
+        $this->call(CompanyUserSeeder::class);
+        $this->call(PurchaseOrderSeeder::class);
+        $this->call(InvoiceSeeder::class);
         $this->call(RoleTypeSeeder::class);
     }
 }

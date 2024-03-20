@@ -26,6 +26,7 @@ use App\Models\Bank;
 use App\Models\Company;
 use App\Models\Pipeline;
 use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -160,6 +161,15 @@ Route::get('/UI/get/bank/documents/{id}', [BankController::class, 'bankDocuments
 Route::post('/UI/new/bank', [BankController::class, 'store'])->name('UI.new.bank');
 Route::post('/UI/bank/email/check', [BankController::class, 'checkEmail'])->name('UI.bank.email.check');
 Route::get('/associated/users/bank', [BankController::class, 'associatedBankUser'])->name('bank.user.associatedUSer');
+Route::get('/get/bank/{id}', [BankController::class, 'getBankByID'])->name('get.bank.by.id');
+Route::get('/get/bank/users/{id}', [BankController::class, 'getBankUsers'])->name('get.bank.users');
+Route::post('/add/user/bank', [BankController::class, 'addUserToABank'])->name('add.user.bank');
+Route::get('/get/users/for/mapping/{id}', [BankController::class, 'getUserToMap'])->name('get.users.to.map');
+Route::post('/post/mapped/bank/user', [BankController::class, 'postMapBankUser'])->name('post.map.bank.user');
+Route::get('/get/user/data/for/mapping', function (Request $request) {
+    $user = User::where('name', $request->input('name'))->first();
+    return response()->json($user);
+})->name('user.data.get.for.mapping');
 //Roles
 
 Route::get('/UI/roles/permissions', [RoleTypeController::class, 'index'])->name('UI.roles.permissions');
@@ -184,3 +194,5 @@ Route::get('/get/country/city', [CityController::class, 'getCountryCities'])->na
 Route::get('/get/banks/names', function () {
     return response()->json(Bank::pluck('name'));
 })->name('get.banks.name');
+
+Route::get('/get/UI/all/programs', [ProgramController::class, 'index'])->name('UI.programs.get');

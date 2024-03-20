@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BankResource extends JsonResource
+class AnchorUIResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,9 @@ class BankResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'url' => $this->url,
-            'email' => $this->email,
-            'contact_person' => $this->Admin->name ?? 'Not Admin',
-            'created_at' => $this->created_at->format('d/M/Y'),
+            'branch_code' => $this->branch_code,
+            'organization_type' => $this->organization_type,
+            'customer_type' => $this->customer_type,
         ];
     }
 }
