@@ -56,13 +56,10 @@ class ScheduleController extends Controller
         $props = $request->input('extendedProps');
         $title = $request->input('title');
         $pipeline = [];
-        if (is_numeric($title)) {
-            $pipeline = Pipeline::whereId($title)->first();
-        }
-        info($request->all());
+        $pipeline = Pipeline::whereName($title)->first();
         $event = Schedule::create([
-            'title' => !is_numeric($title) ? $title : "Meeting with " . $pipeline->name,
-            'pipeline_id' => is_numeric($title) ? $title : 0,
+            'title' => "Meeting with " . $pipeline->name,
+            'pipeline_id' => $pipeline->id,
             'start' => $request->input('start'),
             'end' => $request->input('end'),
             'allDay' => $request->input('allDay'),

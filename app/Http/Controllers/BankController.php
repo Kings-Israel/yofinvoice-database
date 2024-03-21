@@ -71,7 +71,7 @@ class BankController extends Controller
         $bank = Bank::create([
             'name' => $name,
             'email' => $email,
-            'url' => Str::replace(' ', '', $name),
+            'url' => "https://yofinvoice.deveint.live/bank/" . strtolower(Str::replace(' ', '', $name)),
             'contact_person_id' => $user->id,
         ]);
 

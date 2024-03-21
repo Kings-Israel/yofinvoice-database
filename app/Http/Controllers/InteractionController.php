@@ -12,9 +12,11 @@ class InteractionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(InteractionUIResource::collection(Interaction::all()));
+        $id = $request->input('id');
+
+        return response()->json(InteractionUIResource::collection(Interaction::where('pipeline_id', $id)->get()));
     }
 
     /**

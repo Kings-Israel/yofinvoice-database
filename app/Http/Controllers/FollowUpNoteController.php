@@ -13,9 +13,10 @@ class FollowUpNoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(FollowUpUIResource::collection(FollowUpNote::all()));
+        $id = $request->input('id');
+        return response()->json(FollowUpUIResource::collection(FollowUpNote::where('pipeline_id', $id)->get()));
     }
 
     /**
@@ -33,7 +34,6 @@ class FollowUpNoteController extends Controller
     {
 
         $data = $request->all();
-        info($data['checked'] == 'done');
         $followups = FollowUpNote::create([
             'pipeline_id' => $data['id'],
             'status' => $data['checked'] === 'done' ? '1' : '0',

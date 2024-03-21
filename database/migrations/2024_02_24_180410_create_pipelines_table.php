@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('tatDays')->default(0);
             $table->string('department')->nullable();
             $table->enum('lead_type', ['individual', 'corporate'])->default('individual');
-            $table->enum('product', ['vendor financing', 'dealer financing'])->default('vendor financing');
+            $table->enum('product', ['vendor financing', 'dealer financing', 'factoring'])->default('vendor financing');
             $table->string('email')->unique();
             $table->string('phone_number');
             $table->string('point_of_contact')->nullable();
