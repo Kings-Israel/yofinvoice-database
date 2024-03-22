@@ -24,6 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('payment_requests', function (Blueprint $table) {
+            DB::statement("ALTER TABLE payment_requests CHANGE COLUMN type type ENUM('created', 'paid', 'pending', 'failed') NULL DEFAULT 'created'");
             $table->dropColumn('rejected_reason');
         });
     }
