@@ -14,28 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(2)->create();
-        // CompanyTest::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Ish',
-            'email' => 'ishmael@deveint.ish',
-        ]);
-
-        User::factory()->create([
-            'name' => 'crm',
-            'email' => 'crm@yofinvoice.com',
-        ]);
-        User::factory()->create([
-            'name' => 'Linet',
-            'email' => 'linet@deveint.com',
-        ]);
+        $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(ProgramRoleSeeder::class);
         $this->call(OpportunitySeeder::class);
         $this->call(ExpenseManagementSeeder::class);
         $this->call(TransactionSeeder::class);
 
-        $this->call(RolesAndPermissionsSeeder::class);
-        $this->call(ProgramRoleSeeder::class);
         $this->call(ProgramTypeSeeder::class);
         $this->call(ProgramCodeSeeder::class);
         $this->call(UsersSeeder::class);
@@ -48,5 +32,28 @@ class DatabaseSeeder extends Seeder
         $this->call(PurchaseOrderSeeder::class);
         $this->call(InvoiceSeeder::class);
         $this->call(RoleTypeSeeder::class);
+
+        User::factory(2)->create();
+        // CompanyTest::factory(10)->create();
+
+        User::factory()->create([
+            'name' => 'Ish',
+            'email' => 'ishmael@deveint.ish',
+        ])->assignRole('admin');
+
+        User::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@yofinvoice.com',
+        ])->assignRole('admin');
+
+        User::factory()->create([
+            'name' => 'crm',
+            'email' => 'crm@yofinvoice.com',
+        ])->assignRole('crm');
+        User::factory()->create([
+            'name' => 'Linet',
+            'email' => 'linet@deveint.com',
+        ])->assignRole('crm');
+
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PermissionListResource;
 use App\Models\PermissionData;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class PermissionDataController extends Controller
 {
@@ -18,6 +19,7 @@ class PermissionDataController extends Controller
         $data = PermissionData::withCount('roleIDs')->paginate($itemsPerPage, ['*'], 'page', $page);
         $response = [
             'permissions' => PermissionListResource::collection($data),
+            'permisionTest' => Role::withCount('Permissions')->get(),
             'totalPermissions' => $data->total(),
             'currentPage' => $data->currentPage(),
             'lastPage' => $data->lastPage(),

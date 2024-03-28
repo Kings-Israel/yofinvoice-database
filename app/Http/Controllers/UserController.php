@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\User\UserListResource;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class UserController extends Controller
         $sortBy = $request->query('sortBy', 'id');
         $searchQuery = $request->query('q');
         $orderBy = $request->query('orderBy', 'desc');
-        $query = User::query();
+        $query = User::with('roles');
 
         if (!is_null($searchQuery)) {
             $query->search('%' . $searchQuery . '%');
@@ -65,9 +66,10 @@ class UserController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $roleId = Role::where('name', $request->input('role'))->value('id');
         $user = User::create([
             'name' => $request->input('fullName'),
-            'role' => $request->input('role'),
+            'role' => $roleId,
             'contact' => $request->input('contact'),
             'password' => Hash::make('password'),
             'email' => $request->input('email'),

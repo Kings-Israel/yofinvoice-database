@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccessRightGroup;
 use App\Models\PermissionData;
 use App\Models\RoleType;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleTypeController extends Controller
 {
@@ -47,7 +50,13 @@ class RoleTypeController extends Controller
                 'access_right_group_id' => $roleID,
             ]);
         }
-        info($role);
+        $role = Role::firstOrCreate(['name' => $request->input('RoleTypeName'), 'guard_name' => 'web']);
+        $permissions = AccessRightGroup::whereIn('id', $request->input('RoleIDs'))->pluck('name');
+
+        foreach ($permissions as $permission) {
+            $permissionResult = Permission::firstOrCreate(['name' => $permission]);
+            $role->givePermissionTo($permissionResult);
+        }
         if ($role) {
             return response()->json(['message' => 'Role Created Successfully'], 201);
         } else {
